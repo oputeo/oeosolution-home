@@ -100,16 +100,19 @@
           <h3>ReconFlow</h3>
           <p class="card-sub">Reconciliation &amp; fee intelligence SaaS</p>
           <p>
-            Upload, match, and investigate revenue streams with anomaly detection,
-            executive dashboards, audit periods, and multi-tenant workspaces — designed for
-            operators who must explain every naira.
+            A necessary tool in a fintech-integrated ecosystem: upload, match, and investigate
+            revenue streams with anomaly detection, executive dashboards, and multi-tenant
+            workspaces — so operators and partners can explain every naira.
+            Supports structured <strong>back audit lookback up to 10 years</strong> alongside
+            the current audit year, ideal for historical recovery, fee assurance, and regulatory scrutiny.
           </p>
           <ul>
-            <li>Executive intelligence &amp; anomaly queues</li>
-            <li>Tenant-ready for partners and agencies</li>
-            <li>Ideal companion to waste &amp; utility collections</li>
+            <li>10-year back audit capability for historical revenue recovery</li>
+            <li>Executive intelligence, anomalies, and fee-control workflows</li>
+            <li>Built for waste, utility, and collection ecosystems with fintech rails</li>
+            <li>Tenant-ready for agencies, partners, and multi-party assurance</li>
           </ul>
-          <a class="btn btn-ghost" href="#demo-access">Request guided demo →</a>
+          <a class="btn btn-ghost" href="#pilot-form" data-interest="ReconFlow">Request ReconFlow pilot →</a>
         </article>
 
         <article class="card">
@@ -242,9 +245,9 @@
           </label>
           <label>
             Interest
-            <select name="interest">
+            <select name="interest" id="interestSelect">
               <option value="AquaTrack AI ERP">AquaTrack AI ERP (water factory)</option>
-              <option value="ReconFlow">ReconFlow (revenue assurance)</option>
+              <option value="ReconFlow">ReconFlow (revenue assurance · 10-year back audit)</option>
               <option value="SmartDelta Waste">SmartDelta Waste</option>
               <option value="Full OEO suite">Full OEO suite</option>
               <option value="General enquiry">General enquiry</option>
@@ -318,6 +321,22 @@
     document.getElementById('y').textContent = new Date().getFullYear();
 
     (function () {
+      // Deep-link from product cards: #pilot-form with preferred interest
+      document.querySelectorAll('a[data-interest]').forEach(function (link) {
+        link.addEventListener('click', function () {
+          var interest = link.getAttribute('data-interest');
+          var sel = document.getElementById('interestSelect');
+          if (sel && interest) {
+            for (var i = 0; i < sel.options.length; i++) {
+              if (sel.options[i].value === interest) {
+                sel.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        });
+      });
+
       var form = document.getElementById('pilotForm');
       var status = document.getElementById('pilotFormStatus');
       if (!form) return;
