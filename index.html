@@ -26,7 +26,7 @@
       <a href="#industries">Industries</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="#demo-access">Demo access</a>
+    <a class="btn btn-primary btn-sm" href="#pilot-form">Request pilot</a>
   </header>
 
   <main id="top">
@@ -203,12 +203,82 @@
         </div>
         <div class="demo-actions">
           <a class="btn btn-primary" href="https://aquatrack.oeosolution.com/login" target="_blank" rel="noopener">Open demo login</a>
-          <a class="btn btn-ghost" href="mailto:admin@oeosolution.com?subject=AquaTrack%20pilot%20request">Request full pilot access</a>
+          <a class="btn btn-ghost" href="#pilot-form">Request full pilot access</a>
           <p class="fine-inline">
-            Registration on the app is closed. Kindly contact OEO Solution for authorised accounts
-            after your evaluation.
+            Registration on the app is closed. Kindly use the pilot form below or contact OEO Solution
+            for authorised accounts after your evaluation.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section id="pilot-form" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Full pilot access</p>
+        <h2>Request a guided pilot with OEO Solution</h2>
+        <p>
+          Complete this form and we will contact you to schedule onboarding.
+          Public self-registration is not available — this protects operational data.
+        </p>
+      </div>
+
+      <div class="pilot-grid">
+        <form id="pilotForm" class="pilot-form" novalidate>
+          <label>
+            Full name <span>*</span>
+            <input type="text" name="name" required placeholder="Your full name" autocomplete="name" />
+          </label>
+          <label>
+            Organisation / ministry / company <span>*</span>
+            <input type="text" name="organisation" required placeholder="e.g. Delta State …" autocomplete="organization" />
+          </label>
+          <label>
+            Your email <span>*</span>
+            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+          </label>
+          <label>
+            Your phone <span>*</span>
+            <input type="tel" name="phone" required placeholder="e.g. 0803…" autocomplete="tel" />
+          </label>
+          <label>
+            Interest
+            <select name="interest">
+              <option value="AquaTrack AI ERP">AquaTrack AI ERP (water factory)</option>
+              <option value="ReconFlow">ReconFlow (revenue assurance)</option>
+              <option value="SmartDelta Waste">SmartDelta Waste</option>
+              <option value="Full OEO suite">Full OEO suite</option>
+              <option value="General enquiry">General enquiry</option>
+            </select>
+          </label>
+          <label>
+            Message
+            <textarea name="message" rows="4" placeholder="Tell us about your plant, agency, or pilot goals…"></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary">Send pilot request</button>
+          <p id="pilotFormStatus" class="form-status" hidden></p>
+        </form>
+
+        <aside class="contact-card">
+          <h3>OEO Solution contact</h3>
+          <p class="contact-lead">We respond during business hours. Prefer WhatsApp or call for urgent demos.</p>
+          <p>
+            <strong>Phone / WhatsApp</strong><br />
+            <a href="tel:+2349039613889">0903 961 3889</a><br />
+            <a class="btn btn-ghost btn-sm" href="https://wa.me/2349039613889?text=Hello%20OEO%20Solution%2C%20I%20would%20like%20full%20pilot%20access." target="_blank" rel="noopener">Chat on WhatsApp</a>
+          </p>
+          <p>
+            <strong>Email</strong><br />
+            <a href="mailto:oeosolution@gmail.com">oeosolution@gmail.com</a>
+          </p>
+          <p>
+            <strong>Web</strong><br />
+            www.oeosolution.com
+          </p>
+          <p class="demo-note">
+            For evaluation only, use the read-only AquaTrack demo above.
+            Full pilot access is provisioned after we confirm your request.
+          </p>
+        </aside>
       </div>
     </section>
 
@@ -222,8 +292,8 @@
         </p>
       </div>
       <div class="cta-actions">
-        <a class="btn btn-primary" href="#demo-access">Demo credentials</a>
-        <a class="btn btn-light" href="mailto:admin@oeosolution.com">admin@oeosolution.com</a>
+        <a class="btn btn-primary" href="#pilot-form">Request pilot access</a>
+        <a class="btn btn-light" href="tel:+2349039613889">0903 961 3889</a>
       </div>
     </section>
   </main>
@@ -237,13 +307,61 @@
       </div>
     </div>
     <div class="footer-links">
-      <a href="https://aquatrack.oeosolution.com">AquaTrack</a>
-      <a href="https://reconciliation-stable-saas.vercel.app">ReconFlow</a>
-      <a href="https://smartdelta-delta-production.up.railway.app">SmartDelta</a>
-      <a href="mailto:admin@oeosolution.com">Contact</a>
+      <a href="#demo-access">AquaTrack demo</a>
+      <a href="#pilot-form">Request pilot</a>
+      <a href="tel:+2349039613889">0903 961 3889</a>
+      <a href="mailto:oeosolution@gmail.com">oeosolution@gmail.com</a>
     </div>
-    <p class="fine">© <span id="y"></span> OEO Solution · oeosolution.com · All rights reserved.</p>
+    <p class="fine">© <span id="y"></span> OEO Solution · oeosolution.com · Phone 09039613889 · oeosolution@gmail.com</p>
   </footer>
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    (function () {
+      var form = document.getElementById('pilotForm');
+      var status = document.getElementById('pilotFormStatus');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(form);
+        var name = String(fd.get('name') || '').trim();
+        var organisation = String(fd.get('organisation') || '').trim();
+        var email = String(fd.get('email') || '').trim();
+        var phone = String(fd.get('phone') || '').trim();
+        var interest = String(fd.get('interest') || '').trim();
+        var message = String(fd.get('message') || '').trim();
+
+        if (!name || !organisation || !email || !phone) {
+          status.hidden = false;
+          status.textContent = 'Please complete all required fields marked *.';
+          status.className = 'form-status err';
+          return;
+        }
+
+        var subject = encodeURIComponent('Full pilot access request — ' + interest);
+        var body = encodeURIComponent(
+          'Full pilot access request (from oeosolution.com)\n\n' +
+          'Name: ' + name + '\n' +
+          'Organisation: ' + organisation + '\n' +
+          'Email: ' + email + '\n' +
+          'Phone: ' + phone + '\n' +
+          'Interest: ' + interest + '\n\n' +
+          'Message:\n' + (message || '(none)') + '\n\n' +
+          '— Sent from OEO Solution website pilot form'
+        );
+
+        // Open mail client to OEO inbox
+        window.location.href = 'mailto:oeosolution@gmail.com?subject=' + subject + '&body=' + body;
+
+        status.hidden = false;
+        status.className = 'form-status ok';
+        status.innerHTML =
+          'Opening your email app to <strong>oeosolution@gmail.com</strong>. ' +
+          'If it does not open, call/WhatsApp <a href="tel:+2349039613889">0903 961 3889</a> ' +
+          'or email us directly.';
+      });
+    })();
+  </script>
 </body>
 </html>
