@@ -281,6 +281,39 @@ img { max-width: 100%; display: block; }
 .industry h3 { margin: 0 0 0.4rem; color: var(--navy); }
 .industry p { margin: 0; color: var(--muted); }
 
+.demo-box {
+  display: grid;
+  gap: 1.25rem;
+  background: white;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  padding: 1.4rem;
+  box-shadow: var(--shadow);
+}
+.demo-creds p { margin: 0 0 0.85rem; color: var(--ink); }
+.demo-creds code {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.35rem 0.55rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.demo-note {
+  color: var(--muted) !important;
+  font-size: 0.9rem !important;
+}
+.demo-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; }
+.fine-inline {
+  width: 100%;
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+@media (min-width: 800px) {
+  .demo-box { grid-template-columns: 1.2fr 1fr; align-items: center; }
+}
+
 .cta-band {
   max-width: var(--max);
   margin: 0 auto 2rem;
