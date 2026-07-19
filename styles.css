@@ -347,14 +347,31 @@ img { max-width: 100%; display: block; }
   .pilot-grid { grid-template-columns: 1.25fr 0.9fr; align-items: start; }
 }
 
-.demo-box {
+.demo-pair {
   display: grid;
   gap: 1.25rem;
+}
+@media (min-width: 900px) {
+  .demo-pair { grid-template-columns: 1fr 1fr; }
+}
+.demo-box {
+  display: grid;
+  gap: 1rem;
   background: white;
   border: 1px solid #bbf7d0;
   border-radius: 20px;
   padding: 1.4rem;
   box-shadow: var(--shadow);
+  align-content: start;
+}
+.demo-box.recon {
+  border-color: #bfdbfe;
+  background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+}
+.demo-box h3 {
+  margin: 0.35rem 0 0.25rem;
+  color: var(--navy-deep);
+  font-size: 1.15rem;
 }
 .demo-creds p { margin: 0 0 0.85rem; color: var(--ink); }
 .demo-creds code {
