@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OEO Solution — Links</title>
+  <meta name="description" content="Official OEO Solution links: AquaTrack demos, module walkthroughs, ReconFlow, contact, and social channels." />
+  <link rel="canonical" href="https://oeosolution.com/links" />
+  <link rel="icon" href="../assets/logo-oeo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="links-body">
+  <main class="links-shell">
+    <header class="links-header">
+      <img class="links-logo" src="../assets/logo-oeo-mark.jpg" alt="OEO Solution" width="72" height="72" />
+      <h1>OEO Solution</h1>
+      <p>Industry software for African enterprise — water ERP, recon, waste ops.</p>
+      <p class="links-handle">oeosolution.com</p>
+    </header>
+
+    <section class="links-stack" aria-label="Primary links">
+      <a class="link-card primary" href="../aquatrack/">
+        <span class="link-kicker">AquaTrack media</span>
+        <strong>6 module walkthroughs</strong>
+        <span>Sales · Purchases · Gate QR · Production · Inventory · QC</span>
+      </a>
+      <a class="link-card" href="https://aquatrack.oeosolution.com/login" target="_blank" rel="noopener">
+        <span class="link-kicker">Product demo</span>
+        <strong>AquaTrack read-only demo</strong>
+        <span>aquatrack.oeosolution.com</span>
+      </a>
+      <a class="link-card" href="https://reconciliation-stable-saas.vercel.app/login" target="_blank" rel="noopener">
+        <span class="link-kicker">Revenue assurance</span>
+        <strong>ReconFlow view-only demo</strong>
+        <span>SmartDelta / fee intelligence</span>
+      </a>
+      <a class="link-card" href="../#pilot-form">
+        <span class="link-kicker">Sales</span>
+        <strong>Request a guided pilot</strong>
+        <span>Form on oeosolution.com</span>
+      </a>
+      <a class="link-card" href="https://wa.me/2349039613889?text=Hello%20OEO%20Solution%2C%20I%20found%20you%20via%20your%20link%20hub." target="_blank" rel="noopener">
+        <span class="link-kicker">WhatsApp</span>
+        <strong>Chat with OEO</strong>
+        <span>0903 961 3889</span>
+      </a>
+      <a class="link-card" href="mailto:oeosolution@gmail.com">
+        <span class="link-kicker">Email</span>
+        <strong>oeosolution@gmail.com</strong>
+        <span>Business enquiries</span>
+      </a>
+    </section>
+
+    <section class="links-modules" aria-label="AquaTrack modules">
+      <h2>AquaTrack clips</h2>
+      <div class="links-module-grid">
+        <a href="../aquatrack/#sales">01 Sales</a>
+        <a href="../aquatrack/#purchases">02 Purchases</a>
+        <a href="../aquatrack/#gate-qr">03 Gate QR</a>
+        <a href="../aquatrack/#production">04 Production</a>
+        <a href="../aquatrack/#inventory">05 Inventory</a>
+        <a href="../aquatrack/#qc">06 QC</a>
+      </div>
+    </section>
+
+    <section class="links-social" aria-label="Social">
+      <p class="links-social-label">Follow OEO</p>
+      <div class="social-row social-row-center">
+        <a class="social-btn" data-social="youtube" href="#" target="_blank" rel="noopener">YouTube</a>
+        <a class="social-btn" data-social="facebook" href="#" target="_blank" rel="noopener">Facebook</a>
+        <a class="social-btn" data-social="x" href="#" target="_blank" rel="noopener">X</a>
+        <a class="social-btn" data-social="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+      </div>
+      <p class="links-note">
+        Paste real profile URLs in <code>js/social-config.js</code> once accounts are ready.
+      </p>
+    </section>
+
+    <p class="links-foot">
+      <a href="../">← oeosolution.com</a>
+      · © <span id="y"></span> OEO Solution
+    </p>
+  </main>
+
+  <script src="../js/social-config.js"></script>
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    if (window.OEO_SOCIAL && typeof window.OEO_SOCIAL.apply === 'function') {
+      window.OEO_SOCIAL.apply();
+    }
+  </script>
+</body>
+</html>

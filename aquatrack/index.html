@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AquaTrack AI ERP — Module walkthroughs | OEO Solution</title>
+  <meta name="description" content="Short AquaTrack walkthroughs for water factories: sales, purchases, gate QR, production, inventory, and QC. Demo and pilot with OEO Solution." />
+  <link rel="canonical" href="https://oeosolution.com/aquatrack" />
+  <link rel="icon" href="../assets/logo-oeo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="OEO Solution home">
+      <img src="../assets/logo-oeo.svg" alt="OEO logo" width="44" height="44" />
+      <span>
+        <strong>OEO Solution</strong>
+        <small>oeosolution.com</small>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="../#solutions">Solutions</a>
+      <a href="./">AquaTrack media</a>
+      <a href="../#demo-access">Demos</a>
+      <a href="../#pilot-form">Pilot</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="https://aquatrack.oeosolution.com/login" target="_blank" rel="noopener">Open demo</a>
+  </header>
+
+  <main>
+    <section class="page-hero section">
+      <div class="section-head">
+        <p class="eyebrow">AquaTrack AI ERP</p>
+        <h1 class="page-title">Module walkthroughs for water factories</h1>
+        <p>
+          Each clip maps to a real plant workflow. Share a single bullet link
+          (e.g. <code class="inline-code">oeosolution.com/aquatrack#gate-qr</code>)
+          with owners, cashiers, and production leads.
+        </p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://aquatrack.oeosolution.com/login" target="_blank" rel="noopener">Try read-only demo</a>
+        <a class="btn btn-ghost" href="../#pilot-form">Request guided pilot</a>
+        <a class="btn btn-ghost" href="../links/">Social link hub</a>
+      </div>
+    </section>
+
+    <section class="section module-jump" aria-label="Jump to module">
+      <p class="jump-label">Jump to module</p>
+      <div class="jump-chips" id="jumpChips">
+        <!-- filled by script -->
+      </div>
+    </section>
+
+    <section class="section modules" id="modules">
+      <!-- Module cards rendered from CONFIG so YouTube IDs are easy to paste -->
+    </section>
+
+    <section class="cta-band">
+      <div>
+        <p class="eyebrow">Next step</p>
+        <h2>See AquaTrack on sample plant data</h2>
+        <p>
+          Prospect demo: <strong>demo@aquatrack.com</strong> · password on the homepage demo box.
+          Full pilot is provisioned after we confirm your plant.
+        </p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="https://aquatrack.oeosolution.com/login" target="_blank" rel="noopener">Open AquaTrack demo</a>
+        <a class="btn btn-light" href="../#pilot-form">Request pilot</a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="site-footer">
+    <div class="footer-brand">
+      <img src="../assets/logo-oeo.svg" alt="" width="40" height="40" />
+      <div>
+        <strong>OEO Solution</strong>
+        <p>Innovative, customised, industry-specific software for African enterprise operations.</p>
+      </div>
+    </div>
+    <div class="social-row" aria-label="OEO on social media">
+      <a class="social-btn" data-social="youtube" href="#" target="_blank" rel="noopener">YouTube</a>
+      <a class="social-btn" data-social="facebook" href="#" target="_blank" rel="noopener">Facebook</a>
+      <a class="social-btn" data-social="x" href="#" target="_blank" rel="noopener">X</a>
+      <a class="social-btn" data-social="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div class="footer-links">
+      <a href="../">Home</a>
+      <a href="./">AquaTrack media</a>
+      <a href="../links/">Link hub</a>
+      <a href="../#demo-access">Demos</a>
+      <a href="../#pilot-form">Request pilot</a>
+      <a href="tel:+2349039613889">0903 961 3889</a>
+      <a href="mailto:oeosolution@gmail.com">oeosolution@gmail.com</a>
+    </div>
+    <p class="fine">© <span id="y"></span> OEO Solution · oeosolution.com</p>
+  </footer>
+
+  <script src="../js/social-config.js"></script>
+  <script>
+    /**
+     * PASTE YOUTUBE VIDEO IDs HERE (not full URLs).
+     * From https://www.youtube.com/watch?v=XXXXXXXX → use XXXXXXXX
+     * Leave blank until the clip is uploaded — a placeholder shows instead.
+     */
+    var YOUTUBE_IDS = {
+      sales: '',
+      purchases: '',
+      'gate-qr': '',
+      production: '',
+      inventory: '',
+      qc: ''
+    };
+
+    var MODULES = [
+      {
+        id: 'sales',
+        num: '01',
+        title: 'Sales / POS & credit',
+        benefit: 'Cashier POS, credit sales, and morning cash integrity — fewer till leaks.',
+        bullets: ['Cash & credit sales', 'Customer balances', 'Shift-friendly cashier roles']
+      },
+      {
+        id: 'purchases',
+        num: '02',
+        title: 'Purchases & approvals',
+        benefit: 'Supplier buys with approval trails so stock and cash stay aligned.',
+        bullets: ['Purchase requests', 'Approvals', 'Supplier visibility']
+      },
+      {
+        id: 'gate-qr',
+        num: '03',
+        title: 'Gate pass & drivers QR',
+        benefit: 'Loading tickets and driver QR at the gate stop ghost loads.',
+        bullets: ['Loading tickets', 'Driver QR scan', 'Gate control']
+      },
+      {
+        id: 'production',
+        num: '04',
+        title: 'Production & batches',
+        benefit: 'Daily plans, BOM, and batches so output matches what finance sees.',
+        bullets: ['Production plans', 'BOM & batches', 'Multi-shift plants']
+      },
+      {
+        id: 'inventory',
+        num: '05',
+        title: 'Inventory & low-stock',
+        benefit: 'Warehouse truth with low-stock alerts before a stockout hits sales.',
+        bullets: ['Stock levels', 'Low-stock alerts', 'Store roles']
+      },
+      {
+        id: 'qc',
+        num: '06',
+        title: 'Quality control (QC)',
+        benefit: 'QC checks tied to production so bad batches don’t ship unchecked.',
+        bullets: ['QC checkpoints', 'Batch linkage', 'Audit-ready records']
+      }
+    ];
+
+    function youtubeEmbed(id) {
+      if (!id || !String(id).trim()) return null;
+      var clean = String(id).trim();
+      // Allow pasting full watch URLs by accident
+      var m = clean.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{6,})/);
+      if (m) clean = m[1];
+      return 'https://www.youtube.com/embed/' + encodeURIComponent(clean) + '?rel=0';
+    }
+
+    function renderModules() {
+      var root = document.getElementById('modules');
+      var chips = document.getElementById('jumpChips');
+      if (!root || !chips) return;
+
+      chips.innerHTML = MODULES.map(function (m) {
+        return '<a class="jump-chip" href="#' + m.id + '">' + m.num + ' · ' + m.title.split('&')[0].trim() + '</a>';
+      }).join('');
+
+      root.innerHTML = MODULES.map(function (m) {
+        var yt = youtubeEmbed(YOUTUBE_IDS[m.id]);
+        var media = yt
+          ? '<div class="video-frame"><iframe src="' + yt + '" title="' + m.title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>'
+          : '<div class="video-placeholder">' +
+              '<p class="video-placeholder-title">Clip coming soon</p>' +
+              '<p class="video-placeholder-hint">Paste the YouTube ID for <strong>' + m.id + '</strong> in <code>YOUTUBE_IDS</code> on this page.</p>' +
+              '<p class="video-placeholder-share">Shareable link: <code>oeosolution.com/aquatrack#' + m.id + '</code></p>' +
+            '</div>';
+
+        var list = m.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('');
+
+        return (
+          '<article class="module-card" id="' + m.id + '">' +
+            '<div class="module-copy">' +
+              '<span class="module-num">Module ' + m.num + '</span>' +
+              '<h2>' + m.title + '</h2>' +
+              '<p class="module-benefit">' + m.benefit + '</p>' +
+              '<ul>' + list + '</ul>' +
+              '<div class="module-actions">' +
+                '<a class="btn btn-primary btn-sm" href="https://aquatrack.oeosolution.com/login" target="_blank" rel="noopener">Open demo</a>' +
+                '<a class="btn btn-ghost btn-sm" href="../#pilot-form">Request pilot</a>' +
+                '<button type="button" class="btn btn-ghost btn-sm copy-link" data-hash="' + m.id + '">Copy link</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="module-media">' + media + '</div>' +
+          '</article>'
+        );
+      }).join('');
+
+      root.querySelectorAll('.copy-link').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var hash = btn.getAttribute('data-hash');
+          var url = window.location.origin + window.location.pathname.replace(/\/?$/, '/') + '#' + hash;
+          // Prefer clean production host if opened on file://
+          if (!window.location.protocol.startsWith('http')) {
+            url = 'https://oeosolution.com/aquatrack#' + hash;
+          } else if (window.location.hostname.includes('onrender.com') || window.location.hostname.includes('github.io')) {
+            url = window.location.origin + '/aquatrack/#' + hash;
+          }
+          navigator.clipboard.writeText(url).then(function () {
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy link'; }, 1600);
+          }).catch(function () {
+            prompt('Copy this link:', url);
+          });
+        });
+      });
+    }
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+    if (window.OEO_SOCIAL && typeof window.OEO_SOCIAL.apply === 'function') {
+      window.OEO_SOCIAL.apply();
+    }
+    renderModules();
+
+    // Highlight jump target briefly when hash changes
+    function flashTarget() {
+      var id = (location.hash || '').replace('#', '');
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el) {
+        el.classList.add('module-flash');
+        setTimeout(function () { el.classList.remove('module-flash'); }, 1200);
+      }
+    }
+    window.addEventListener('hashchange', flashTarget);
+    flashTarget();
+  </script>
+</body>
+</html>
