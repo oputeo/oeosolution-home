@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="OEO Solutions">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b3d91"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <!-- outer ring -->
+  <circle cx="120" cy="120" r="108" fill="none" stroke="url(#g)" stroke-width="10"/>
+  <circle cx="120" cy="120" r="92" fill="#0b3d91"/>
+  <!-- circuit accents -->
+  <path d="M48 120 H72 M168 120 H192 M120 48 V72 M120 168 V192" stroke="#34d399" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="72" cy="120" r="5" fill="#34d399"/>
+  <circle cx="168" cy="120" r="5" fill="#34d399"/>
+  <circle cx="120" cy="72" r="5" fill="#34d399"/>
+  <circle cx="120" cy="192" r="5" fill="#34d399"/>
+  <!-- OEO letters -->
+  <text x="120" y="132" text-anchor="middle" font-family="Segoe UI, Arial, Helvetica, sans-serif" font-size="52" font-weight="800" fill="#ffffff" letter-spacing="2">OEO</text>
+</svg>

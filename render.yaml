@@ -1,0 +1,11 @@
+# Optional: deploy as Render Static Site (if you prefer Render over GitHub Pages)
+services:
+  - type: web
+    name: oeosolution-home
+    runtime: static
+    buildCommand: "echo static"
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
