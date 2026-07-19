@@ -44,34 +44,47 @@ In Render **aquatrack-frontend** env, ensure public URLs still work (API can rem
 
 ---
 
-## B) Company home → `oeosolution.com` + `www`
+## B) Company home → `www.oeosolution.com` (GitHub Pages — LIVE deploy)
 
-Deploy the folder `oeosolution-home` as a static site.
+Repo: https://github.com/oputeo/oeosolution-home  
+Pages source: `main` branch, root `/`  
+CNAME file: `www.oeosolution.com`
 
-### Option 1 — Render Static Site (same account as AquaTrack)
-1. New → Static Site  
-2. Upload/connect this folder (or GitHub repo)  
-3. Build: leave empty or `echo ok`  
-4. Publish directory: `.`  
-5. Custom domains: add `oeosolution.com` and `www.oeosolution.com`  
-6. Namecheap DNS as Render instructs:
-   - **www** → CNAME to Render  
-   - **@** → URL Redirect to `https://www.oeosolution.com` **or** A record(s) Render provides  
+### Namecheap Advanced DNS (do this now)
 
-### Option 2 — Vercel
-1. `npx vercel` from this folder after `vercel login`  
-2. Domains: add `oeosolution.com` and `www.oeosolution.com`  
-3. Namecheap: CNAME/A as Vercel dashboard shows  
+**1. Remove parking for www (if present)**  
+Delete any CNAME where Host = `www` and Value = `parkingpage.namecheap.com`
+
+**2. Add / edit CNAME for homepage**
+
+| Type | Host | Value | TTL |
+|------|------|--------|-----|
+| CNAME | `www` | `oputeo.github.io` | Automatic |
+
+**3. Apex redirect (already often present)**  
+
+Keep or set:
+
+| Type | Host | Value |
+|------|------|--------|
+| URL Redirect | `@` | `https://www.oeosolution.com/` (prefer https) |
+
+Leave **aquatrack** CNAME untouched.
+
+**4. After DNS propagates (5–60 min)**  
+- Open https://www.oeosolution.com  
+- GitHub → repo → Settings → Pages → enable **Enforce HTTPS** when available  
+
+### GitHub Pages UI check
+https://github.com/oputeo/oeosolution-home/settings/pages  
+Custom domain should show: `www.oeosolution.com`
 
 ---
 
-## C) Remove Namecheap parking
+## C) Optional: Render instead of GitHub Pages
 
-Under Advanced DNS, remove:
-- CNAME `www` → `parkingpage.namecheap.com`
-- Any URL redirect that points only to parking
-
-Then add your real records for home + aquatrack.
+Repo is public; on Render: New Static Site → connect `oputeo/oeosolution-home` → publish dir `.` → custom domain `www.oeosolution.com`.  
+Then CNAME `www` → the Render hostname (not oputeo.github.io).
 
 ---
 
