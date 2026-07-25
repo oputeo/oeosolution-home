@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Manna Life Shop — Navina products · OEO online franchise</title>
+  <meta name="description" content="Manna Life ready pouches by Navina Food Industry. Official online franchise store — OEO Solution. Individual and group bulk pricing, national delivery." />
+  <link rel="canonical" href="https://oeosolution.com/shop/" />
+  <link rel="icon" href="../assets/logo-oeo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="shop.css" />
+</head>
+<body>
+  <div class="shop-sticky-bar">
+    <a href="../">← OEO Solution</a>
+    <a class="shop-cart-pill" href="#cart">
+      Cart <span id="cartBadge">0</span>
+    </a>
+  </div>
+
+  <header class="site-header" style="position:relative">
+    <a class="brand" href="../" aria-label="OEO Solution home">
+      <img src="../assets/logo-oeo.svg" alt="OEO logo" width="44" height="44" />
+      <span>
+        <strong>OEO Solution</strong>
+        <small>Online franchise store</small>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="#products">Products</a>
+      <a href="#pricing">Group pricing</a>
+      <a href="#cart">Cart</a>
+      <a href="../">Software home</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#cart">Order</a>
+  </header>
+
+  <main>
+    <section class="shop-hero">
+      <div>
+        <p class="eyebrow">Manna Life · Ready pouches</p>
+        <h1>Nutrition pouches for students, hostels &amp; groups</h1>
+        <p class="lead">
+          Produced by <strong>Navina Food Industry</strong>.
+          Sold &amp; delivered online by <strong>OEO Solution</strong> (authorised national franchise).
+          Individual or bulk — price and delivery drop as your group grows.
+        </p>
+        <div class="shop-trust">
+          <span>Produced by Navina</span>
+          <span class="alt">Sold by OEO franchise</span>
+          <span>BPA-free pouch</span>
+          <span>National online</span>
+          <span>Paystack / WhatsApp</span>
+        </div>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#products">Shop pouches</a>
+          <a class="btn btn-ghost" href="#pricing">See group tiers</a>
+        </div>
+      </div>
+      <aside class="shop-hero-card">
+        <h2>How bulk works</h2>
+        <ul>
+          <li>Add any mix of the 3 variants</li>
+          <li>Total quantity unlocks automatic discount</li>
+          <li>Delivery cost falls at 10 / 50 / 100+ pouches</li>
+          <li>Never priced below Navina cost floor</li>
+          <li>Checkout via WhatsApp order or Paystack (OEO merchant)</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="shop-section" id="products">
+      <h2>Product catalogue</h2>
+      <p class="lead">
+        Three Manna Life variants. Photos &amp; NAFDAC claims supplied by Navina — replace placeholders with final pack shots when ready.
+        Unit prices adjust to your cart tier.
+      </p>
+      <div class="shop-grid" id="productGrid"></div>
+    </section>
+
+    <section class="shop-section" id="pricing">
+      <h2>Group pricing &amp; delivery</h2>
+      <p class="lead">
+        Discounts cut OEO margin only. System never sells a pouch below Navina wholesale cost.
+      </p>
+      <div class="shop-layout">
+        <div class="shop-panel">
+          <h3>Quantity tiers</h3>
+          <div id="tierTable"></div>
+        </div>
+        <div class="shop-panel" id="cart">
+          <h3>Your cart &amp; delivery</h3>
+          <div class="shop-field">
+            <label for="zoneSelect">Delivery zone</label>
+            <select id="zoneSelect"></select>
+          </div>
+          <div id="cartLines"></div>
+          <div id="cartSummary"></div>
+          <div class="cart-actions">
+            <button type="button" class="btn btn-primary" id="btnWhatsApp" disabled>
+              Order via WhatsApp
+            </button>
+            <button type="button" class="btn btn-ghost" id="btnPaystack" disabled>
+              Pay with Paystack (OEO)
+            </button>
+          </div>
+          <p class="shop-fine">
+            Merchant of record: OEO Solution. Product quality, spoilage &amp; recalls: Navina Food Industry
+            (we route your order/batch details). Office 0903 961 3889 · WhatsApp 0803 668 5485.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <p class="shop-legal">
+      Manna Life products are manufactured by Navina Food Industry. This web shop is operated by OEO Solution
+      as an authorised online vending franchise for national delivery in Nigeria. Not a government website.
+      Software products (AquaTrack, ReconFlow, SmartDelta) are separate — see
+      <a href="../">oeosolution.com</a>.
+      Edit list prices and cost floors in <code>shop/shop.js</code> to match your Navina invoice.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <img src="../assets/logo-oeo.svg" alt="" width="40" height="40" />
+      <div>
+        <strong>OEO Solution</strong>
+        <p>Online franchise store for Manna Life · Produced by Navina Food Industry</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="../">OEO home</a>
+      <a href="../links/">Link hub</a>
+      <a href="../aquatrack/">AquaTrack media</a>
+      <a href="https://wa.me/2348036685485" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="mailto:oeosolution@gmail.com">Email</a>
+    </div>
+    <p class="fine">© <span id="year"></span> OEO Solution · oeosolution.com/shop</p>
+  </footer>
+
+  <script src="shop.js"></script>
+</body>
+</html>
