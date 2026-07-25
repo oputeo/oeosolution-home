@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-25",
+  "franchiseName": "OEO Solution",
+  "producer": "Navina Food Industry",
+  "brand": "Manna Life",
+  "whatsapp": "2348036685485",
+  "officeWhatsapp": "2349039613889",
+  "paystackPublicKey": "",
+  "deliveryBase": 2500,
+  "deliveryZones": [
+    { "id": "south-south", "label": "South-South (Asaba, Warri, PH, …)", "mult": 1 },
+    { "id": "south-west", "label": "South-West (Lagos, Ibadan, …)", "mult": 1.15 },
+    { "id": "south-east", "label": "South-East", "mult": 1.1 },
+    { "id": "north", "label": "North / FCT", "mult": 1.35 },
+    { "id": "other", "label": "Other Nigeria", "mult": 1.4 }
+  ],
+  "tiers": [
+    { "minQty": 1, "unitDiscount": 0, "deliveryFactor": 1, "label": "Individual" },
+    { "minQty": 10, "unitDiscount": 0.1, "deliveryFactor": 0.7, "label": "Small group (10–49)" },
+    { "minQty": 50, "unitDiscount": 0.16, "deliveryFactor": 0.5, "label": "Hostel / class (50–99)" },
+    { "minQty": 100, "unitDiscount": 0.22, "deliveryFactor": 0, "label": "School / dept (100+)" }
+  ],
+  "products": [
+    {
+      "id": "ready-beans",
+      "name": "Ready Beans",
+      "tagline": "Protein-forward ready pouch",
+      "listPrice": 4500,
+      "costFloor": 2800,
+      "stock": 500,
+      "image": "images/ready-beans.jpg",
+      "badge": "BPA-free pouch",
+      "nutrition": "Energy + plant protein · Ready to eat",
+      "color": "#0d9488",
+      "available": true
+    },
+    {
+      "id": "yam-plantain",
+      "name": "Yam & Plantain",
+      "tagline": "Local staple energy blend",
+      "listPrice": 4500,
+      "costFloor": 2800,
+      "stock": 500,
+      "image": "images/yam-plantain.jpg",
+      "badge": "BPA-free pouch",
+      "nutrition": "Complex carbs · Ready to eat",
+      "color": "#0b3d91",
+      "available": true
+    },
+    {
+      "id": "sweet-potato",
+      "name": "Sweet Potato",
+      "tagline": "Natural sweetness · sustained energy",
+      "listPrice": 4500,
+      "costFloor": 2800,
+      "stock": 500,
+      "image": "images/sweet-potato.jpg",
+      "badge": "BPA-free pouch",
+      "nutrition": "Vitamins + energy · Ready to eat",
+      "color": "#b45309",
+      "available": true
+    },
+    {
+      "id": "sku-04",
+      "name": "Catalogue item 4",
+      "tagline": "Edit when Navina SKU is ready",
+      "listPrice": 4500,
+      "costFloor": 2800,
+      "stock": 0,
+      "image": "images/sku-04.jpg",
+      "badge": "Coming soon",
+      "nutrition": "Nutrition panel from Navina pack",
+      "color": "#64748b",
+      "available": false
+    },
+    {
+      "id": "sku-05",
+      "name": "Catalogue item 5",
+      "tagline": "Reserved slot",
+      "listPrice": 4500,
+      "costFloor": 2800,
+      "stock": 0,
+      "image": "images/sku-05.jpg",
+      "badge": "Coming soon",
+      "nutrition": "Nutrition panel from Navina pack",
+      "color": "#475569",
+      "available": false
+    },
+    {
+      "id": "sku-06",
+      "name": "Catalogue item 6",
+      "tagline": "Reserved slot",
+      "listPrice": 4500,
+      "costFloor": 2800,
+      "stock": 0,
+      "image": "images/sku-06.jpg",
+      "badge": "Coming soon",
+      "nutrition": "Nutrition panel from Navina pack",
+      "color": "#334155",
+      "available": false
+    }
+  ]
+}

@@ -5,8 +5,11 @@
 (function () {
   'use strict';
 
-  /** Edit prices (NGN) to match Navina invoice + your retail. */
-  const CONFIG = {
+  /**
+   * Default catalogue — overridden by products-config.json and/or admin browser preview.
+   * Prefer editing via /shop/admin/ then publishing products-config.json
+   */
+  let CONFIG = {
     currency: 'NGN',
     whatsapp: '2348036685485', // 08036685485
     officeWhatsapp: '2349039613889',
@@ -124,6 +127,50 @@
     cart: loadCart(),
     zoneId: 'south-south',
   };
+
+  function applyRemoteConfig(remote) {
+    if (!remote || typeof remote !== 'object') return;
+    if (remote.franchiseName) CONFIG.franchiseName = remote.franchiseName;
+    if (remote.producer) CONFIG.producer = remote.producer;
+    if (remote.brand) CONFIG.brand = remote.brand;
+    if (remote.whatsapp) CONFIG.whatsapp = remote.whatsapp;
+    if (remote.officeWhatsapp) CONFIG.officeWhatsapp = remote.officeWhatsapp;
+    if (remote.paystackPublicKey != null) CONFIG.paystackPublicKey = remote.paystackPublicKey;
+    if (remote.deliveryBase != null) CONFIG.deliveryBase = Number(remote.deliveryBase) || CONFIG.deliveryBase;
+    if (Array.isArray(remote.deliveryZones) && remote.deliveryZones.length) {
+      CONFIG.deliveryZones = remote.deliveryZones;
+    }
+    if (Array.isArray(remote.tiers) && remote.tiers.length) CONFIG.tiers = remote.tiers;
+    if (Array.isArray(remote.products) && remote.products.length) {
+      CONFIG.products = remote.products.slice(0, 6);
+    }
+  }
+
+  async function loadPublishedConfig() {
+    // 1) Admin "preview on this browser"
+    try {
+      if (localStorage.getItem('manna_shop_use_local') === '1') {
+        const local = JSON.parse(localStorage.getItem('manna_shop_config_v1') || 'null');
+        if (local) {
+          applyRemoteConfig(local);
+          return 'local-preview';
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    // 2) Live products-config.json (all visitors)
+    try {
+      const r = await fetch('products-config.json?t=' + Date.now());
+      if (r.ok) {
+        applyRemoteConfig(await r.json());
+        return 'published';
+      }
+    } catch {
+      /* ignore */
+    }
+    return 'embedded';
+  }
 
   function loadCart() {
     try {
@@ -258,8 +305,13 @@
             : stock <= 0
               ? 'Out of stock'
               : `${stock} in stock`;
-        const visual = p.image
-          ? `<img class="shop-card-img" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><span class="shop-card-emoji shop-card-emoji-fallback" style="display:none" aria-hidden="true">🍲</span>`
+        const imgSrc = p.image
+          ? p.image.indexOf('data:') === 0 || p.image.indexOf('http') === 0
+            ? p.image
+            : p.image
+          : '';
+        const visual = imgSrc
+          ? `<img class="shop-card-img" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><span class="shop-card-emoji shop-card-emoji-fallback" style="display:none" aria-hidden="true">🍲</span>`
           : `<span class="shop-card-emoji" aria-hidden="true">${available ? '🍲' : '📦'}</span>`;
 
         if (!available) {
@@ -538,7 +590,7 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('productGrid')?.addEventListener('click', onClick);
     document.getElementById('cartLines')?.addEventListener('click', onClick);
     document.body.addEventListener('change', onChange);
@@ -546,6 +598,11 @@
     document.getElementById('btnPaystack')?.addEventListener('click', paystackPlaceholder);
     document.getElementById('year') &&
       (document.getElementById('year').textContent = String(new Date().getFullYear()));
+    await loadPublishedConfig();
+    // Ensure zone still valid after config load
+    if (!CONFIG.deliveryZones.some((z) => z.id === state.zoneId)) {
+      state.zoneId = CONFIG.deliveryZones[0]?.id || 'south-south';
+    }
     render();
   });
 })();

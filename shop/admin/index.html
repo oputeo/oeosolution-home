@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Manna Life Shop Admin — OEO</title>
+  <link rel="icon" href="../../assets/logo-oeo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div id="loginGate" class="gate">
+    <div class="gate-card">
+      <img src="../../assets/logo-oeo.svg" alt="" width="48" height="48" />
+      <h1>Shop Admin</h1>
+      <p>Manna Life · OEO franchise · Navina products</p>
+      <label class="field">
+        <span>Admin password</span>
+        <input type="password" id="adminPassword" autocomplete="current-password" placeholder="Enter admin password" />
+      </label>
+      <p id="loginError" class="error" hidden></p>
+      <button type="button" class="btn primary" id="btnLogin">Sign in</button>
+      <a class="back" href="../">← Back to shop</a>
+    </div>
+  </div>
+
+  <div id="adminApp" class="admin" hidden>
+    <header class="admin-top">
+      <div>
+        <strong>Manna Life Admin</strong>
+        <span id="configSource" class="muted"></span>
+      </div>
+      <div class="admin-top-actions">
+        <a href="../" target="_blank" rel="noopener">Open shop</a>
+        <button type="button" class="btn ghost" id="btnLogout">Log out</button>
+      </div>
+    </header>
+
+    <div class="banner">
+      <strong>How publish works:</strong> Save → Download <code>products-config.json</code> → replace
+      <code>shop/products-config.json</code> in the project → <code>git push</code> → Render redeploys (2–5 min).
+      Use <em>Preview on this browser</em> to test without publishing.
+    </div>
+
+    <section class="panel">
+      <h2>Store settings</h2>
+      <div class="grid-2">
+        <label class="field"><span>WhatsApp (with country code, no +)</span><input id="cfgWhatsapp" /></label>
+        <label class="field"><span>Delivery base (₦)</span><input id="cfgDelivery" type="number" min="0" step="100" /></label>
+        <label class="field"><span>Paystack public key (optional)</span><input id="cfgPaystack" placeholder="pk_live_… or pk_test_…" /></label>
+        <label class="field"><span>Franchise name on cart</span><input id="cfgFranchise" /></label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Bulk tiers (group quantity discounts)</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Min qty</th>
+              <th>Unit discount (0–0.5)</th>
+              <th>Delivery factor (0–1)</th>
+              <th>Label</th>
+            </tr>
+          </thead>
+          <tbody id="tierBody"></tbody>
+        </table>
+      </div>
+      <p class="hint">Example: 0.1 = 10% off list. Delivery 0 = free. Discounts never go below each product’s cost floor.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Catalogue (6 slots)</h2>
+      <div id="productForms" class="product-forms"></div>
+    </section>
+
+    <section class="panel sticky-actions">
+      <h2>Save &amp; publish</h2>
+      <div class="actions">
+        <button type="button" class="btn primary" id="btnSaveLocal">Save &amp; preview on this browser</button>
+        <button type="button" class="btn" id="btnDownload">Download products-config.json</button>
+        <button type="button" class="btn ghost" id="btnClearLocal">Clear browser preview (use live file)</button>
+        <label class="btn ghost file-btn">
+          Import JSON
+          <input type="file" id="importFile" accept="application/json,.json" hidden />
+        </label>
+      </div>
+      <p id="statusMsg" class="status" hidden></p>
+      <ol class="publish-steps">
+        <li>Click <strong>Download products-config.json</strong></li>
+        <li>Copy it over <code>oeosolution-home/shop/products-config.json</code></li>
+        <li>If you changed pictures: put files in <code>shop/images/</code> (names match <code>image</code> field)</li>
+        <li>
+          <code>git add shop/ &amp;&amp; git commit -m "Update shop catalogue" &amp;&amp; git push</code>
+        </li>
+        <li>Wait for Render → hard refresh shop</li>
+      </ol>
+    </section>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

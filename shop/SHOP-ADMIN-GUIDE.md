@@ -1,8 +1,23 @@
 # Manna Life shop — Admin guide (pictures, prices, stock)
 
 **Live shop:** https://oeosolution-home.onrender.com/shop/  
-**Admin rights today:** edit files in the repo (no separate login panel yet).  
-**Who can edit:** you (OEO) via computer + GitHub/Render.
+**Admin page:** https://oeosolution-home.onrender.com/shop/admin/  
+**Password:** `Admin@oeo2026` (same family as other OEO admin demos — change hash in `admin/admin.js` if needed)
+
+---
+
+## Recommended: use the Admin page
+
+1. Open **/shop/admin/**
+2. Enter password **Admin@oeo2026**
+3. Edit prices, stock, names, availability, tiers, delivery base
+4. **Save & preview on this browser** — test shop on same device
+5. **Download products-config.json**
+6. Replace `shop/products-config.json` in the project
+7. Put photos in `shop/images/` if needed
+8. `git push` → wait for Render
+
+---
 
 ---
 
