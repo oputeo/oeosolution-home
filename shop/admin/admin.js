@@ -102,26 +102,24 @@
     return H.map((x) => (x >>> 0).toString(16).padStart(8, '0')).join('');
   }
 
-  async function sha256Hex(text) {
-    try {
-      if (globalThis.crypto && crypto.subtle && globalThis.isSecureContext !== false) {
-        const data = new TextEncoder().encode(text);
-        const buf = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(buf))
-          .map((b) => b.toString(16).padStart(2, '0'))
-          .join('');
-      }
-    } catch {
-      /* fall through */
-    }
-    return sha256HexSync(text);
-  }
-
   function normalizePassword(pw) {
     // Trim spaces / invisible chars users often paste by accident
     return String(pw || '')
       .replace(/[\u200B-\u200D\uFEFF]/g, '')
       .trim();
+  }
+
+  /** Login uses sync hash only — crypto.subtle can hang on some mobile browsers. */
+  function passwordMatches(pw) {
+    const normalized = normalizePassword(pw);
+    if (!normalized) return false;
+    try {
+      return sha256HexSync(normalized) === PASS_HASH;
+    } catch (e) {
+      console.error('hash error', e);
+      // Last-resort exact match if hash impl fails
+      return normalized === 'Admin@oeo2026';
+    }
   }
 
   function sessionOk() {
@@ -182,14 +180,30 @@
     };
   }
 
+  async function fetchJsonWithTimeout(url, ms) {
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = setTimeout(() => {
+      try {
+        ctrl && ctrl.abort();
+      } catch {
+        /* ignore */
+      }
+    }, ms);
+    try {
+      const r = await fetch(url, ctrl ? { signal: ctrl.signal } : undefined);
+      if (!r.ok) return null;
+      return await r.json();
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function loadConfig() {
     let remote = null;
-    try {
-      const r = await fetch('../products-config.json?t=' + Date.now());
-      if (r.ok) remote = await r.json();
-    } catch {
-      /* ignore */
-    }
+    // Never hang login on a slow network fetch
+    remote = await fetchJsonWithTimeout('../products-config.json?t=' + Date.now(), 4000);
     let local = null;
     try {
       local = JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null');
@@ -423,7 +437,7 @@
     reader.readAsText(file);
   }
 
-  async function tryLogin() {
+  function tryLogin() {
     const err = document.getElementById('loginError');
     const btn = document.getElementById('btnLogin');
     err.hidden = true;
@@ -436,24 +450,34 @@
     }
     if (btn) {
       btn.disabled = true;
-      btn.textContent = 'Checking…';
+      btn.textContent = 'Signing in…';
     }
+    // Sync password check — never leave button stuck on "Checking…"
     try {
-      const hash = await sha256Hex(pw);
-      // Exact match only (case-sensitive): Admin@oeo2026
-      if (hash !== PASS_HASH) {
+      if (!passwordMatches(pw)) {
         err.textContent =
-          'Incorrect password. Use exactly: Admin@oeo2026 (capital A, @oeo, no spaces). Not Admin@2026!';
+          'Incorrect password. Type exactly: Admin@oeo2026 (capital A, @oeo, no ! or spaces).';
         err.hidden = false;
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+        }
         return;
       }
       setSession();
-      await enterAdmin();
+      // Show admin shell immediately
+      document.getElementById('loginGate').hidden = true;
+      document.getElementById('adminApp').hidden = false;
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+      // Load config in background (with timeout)
+      enterAdmin();
     } catch (e) {
       console.error(e);
-      err.textContent = 'Login failed: ' + (e.message || 'unknown error') + '. Try Chrome/Edge over HTTPS.';
+      err.textContent = 'Login failed: ' + (e.message || 'unknown error');
       err.hidden = false;
-    } finally {
       if (btn) {
         btn.disabled = false;
         btn.textContent = 'Sign in';
@@ -464,12 +488,35 @@
   async function enterAdmin() {
     document.getElementById('loginGate').hidden = true;
     document.getElementById('adminApp').hidden = false;
+    // Show empty shell first so user is not stuck
+    if (!config) {
+      config = defaultConfig();
+      while (config.products.length < 6) {
+        const i = config.products.length + 1;
+        config.products.push({
+          id: 'sku-0' + i,
+          name: 'Catalogue item ' + i,
+          tagline: '',
+          listPrice: 4500,
+          costFloor: 2800,
+          stock: 0,
+          image: 'images/sku-0' + i + '.svg',
+          badge: 'Coming soon',
+          nutrition: '',
+          color: '#64748b',
+          available: false,
+        });
+      }
+      render();
+    }
     try {
       await loadConfig();
       render();
     } catch (e) {
       console.error(e);
-      showStatus('Logged in, but config load failed: ' + (e.message || e), true);
+      if (!config) config = defaultConfig();
+      render();
+      showStatus('Using defaults — could not load products-config.json (' + (e.message || e) + ')', true);
     }
   }
 
