@@ -152,6 +152,89 @@
     el.className = 'status' + (isErr ? ' err' : '');
   }
 
+  function defaultProducts() {
+    return [
+      {
+        id: 'ready-beans',
+        name: 'Ready Beans',
+        tagline: 'Protein-forward ready pouch',
+        listPrice: 4500,
+        costFloor: 2800,
+        stock: 500,
+        image: 'images/ready-beans.svg',
+        badge: 'BPA-free pouch',
+        nutrition: 'Energy + plant protein · Ready to eat',
+        color: '#0d9488',
+        available: true,
+      },
+      {
+        id: 'yam-plantain',
+        name: 'Yam & Plantain',
+        tagline: 'Local staple energy blend',
+        listPrice: 4500,
+        costFloor: 2800,
+        stock: 500,
+        image: 'images/yam-plantain.svg',
+        badge: 'BPA-free pouch',
+        nutrition: 'Complex carbs · Ready to eat',
+        color: '#0b3d91',
+        available: true,
+      },
+      {
+        id: 'sweet-potato',
+        name: 'Sweet Potato',
+        tagline: 'Natural sweetness · sustained energy',
+        listPrice: 4500,
+        costFloor: 2800,
+        stock: 500,
+        image: 'images/sweet-potato.svg',
+        badge: 'BPA-free pouch',
+        nutrition: 'Vitamins + energy · Ready to eat',
+        color: '#b45309',
+        available: true,
+      },
+      {
+        id: 'sku-04',
+        name: 'Catalogue item 4',
+        tagline: 'Edit when Navina SKU is ready',
+        listPrice: 4500,
+        costFloor: 2800,
+        stock: 0,
+        image: 'images/sku-04.svg',
+        badge: 'Coming soon',
+        nutrition: 'Nutrition panel from Navina pack',
+        color: '#64748b',
+        available: false,
+      },
+      {
+        id: 'sku-05',
+        name: 'Catalogue item 5',
+        tagline: 'Reserved slot',
+        listPrice: 4500,
+        costFloor: 2800,
+        stock: 0,
+        image: 'images/sku-05.svg',
+        badge: 'Coming soon',
+        nutrition: 'Nutrition panel from Navina pack',
+        color: '#475569',
+        available: false,
+      },
+      {
+        id: 'sku-06',
+        name: 'Catalogue item 6',
+        tagline: 'Reserved slot',
+        listPrice: 4500,
+        costFloor: 2800,
+        stock: 0,
+        image: 'images/sku-06.svg',
+        badge: 'Coming soon',
+        nutrition: 'Nutrition panel from Navina pack',
+        color: '#334155',
+        available: false,
+      },
+    ];
+  }
+
   function defaultConfig() {
     return {
       version: 1,
@@ -176,8 +259,63 @@
         { minQty: 50, unitDiscount: 0.16, deliveryFactor: 0.5, label: 'Hostel / class (50–99)' },
         { minQty: 100, unitDiscount: 0.22, deliveryFactor: 0, label: 'School / dept (100+)' },
       ],
-      products: [],
+      products: defaultProducts(),
     };
+  }
+
+  function ensureSixProducts(cfg) {
+    if (!cfg.products) cfg.products = [];
+    const defaults = defaultProducts();
+    // If empty or only placeholder sku-01 style junk, reset to defaults
+    const broken = cfg.products.some(
+      (p) => p && /^sku-0[123]$/.test(p.id) && (!p.image || String(p.image).indexOf('sku-0') >= 0),
+    );
+    if (!cfg.products.length || (cfg.products.length < 3 && broken)) {
+      cfg.products = defaults.slice();
+    }
+    while (cfg.products.length < 6) {
+      const i = cfg.products.length;
+      cfg.products.push(JSON.parse(JSON.stringify(defaults[i] || defaults[defaults.length - 1])));
+      if (cfg.products.length > 3 && !cfg.products[cfg.products.length - 1].id) {
+        const n = cfg.products.length;
+        cfg.products[cfg.products.length - 1].id = 'sku-0' + n;
+        cfg.products[cfg.products.length - 1].image = 'images/sku-0' + n + '.svg';
+      }
+    }
+    // Fix legacy image paths that 404
+    cfg.products.forEach((p, idx) => {
+      if (!p.image || /sku-0[123]\.(svg|jpg|png)$/i.test(p.image)) {
+        const map = {
+          'sku-01': 'images/ready-beans.svg',
+          'sku-02': 'images/yam-plantain.svg',
+          'sku-03': 'images/sweet-potato.svg',
+        };
+        if (map[p.id]) {
+          p.image = map[p.id];
+          if (p.id === 'sku-01') {
+            p.id = 'ready-beans';
+            p.name = p.name || 'Ready Beans';
+          }
+          if (p.id === 'sku-02') {
+            p.id = 'yam-plantain';
+            p.name = p.name || 'Yam & Plantain';
+          }
+          if (p.id === 'sku-03') {
+            p.id = 'sweet-potato';
+            p.name = p.name || 'Sweet Potato';
+          }
+        } else if (!p.image) {
+          p.image = defaults[idx] ? defaults[idx].image : 'images/sku-04.svg';
+        }
+      }
+      // Prefer .svg placeholders over missing .jpg
+      if (p.image && /\.jpg$/i.test(p.image) && !/^data:/.test(p.image)) {
+        const svgPath = p.image.replace(/\.jpg$/i, '.svg');
+        p.image = svgPath;
+      }
+    });
+    cfg.products = cfg.products.slice(0, 6);
+    return cfg;
   }
 
   async function fetchJsonWithTimeout(url, ms) {
@@ -224,24 +362,7 @@
       config = defaultConfig();
       setSource('Empty defaults');
     }
-    // Ensure 6 product slots
-    while (config.products.length < 6) {
-      const i = config.products.length + 1;
-      config.products.push({
-        id: 'sku-0' + i,
-        name: 'Catalogue item ' + i,
-        tagline: '',
-        listPrice: 4500,
-        costFloor: 2800,
-        stock: 0,
-        image: 'images/sku-0' + i + '.jpg',
-        badge: 'Coming soon',
-        nutrition: '',
-        color: '#64748b',
-        available: false,
-      });
-    }
-    config.products = config.products.slice(0, 6);
+    ensureSixProducts(config);
     if (!config.tiers || !config.tiers.length) {
       config.tiers = defaultConfig().tiers;
     }
@@ -333,7 +454,7 @@
           <label class="field inline full"><input data-p="available" type="checkbox" ${p.available ? 'checked' : ''} /> <span>Available for sale (unchecked = Coming soon)</span></label>
         </div>
         <div class="preview-row">
-          <img src="../${escapeAttr(p.image || '')}" alt="" onerror="this.style.opacity=0.3" />
+          <img src="../${escapeAttr(p.image || 'images/sku-04.svg')}" alt="" onerror="this.onerror=null;this.src='../images/sku-04.svg';this.style.opacity=0.85" />
           <div>
             <div class="muted">Preview from shop/${escapeHtml(p.image || '')}</div>
             <label class="file-upload">
@@ -488,33 +609,20 @@
   async function enterAdmin() {
     document.getElementById('loginGate').hidden = true;
     document.getElementById('adminApp').hidden = false;
-    // Show empty shell first so user is not stuck
+    // Show known-good defaults immediately (no broken sku-01/02/03 paths)
     if (!config) {
       config = defaultConfig();
-      while (config.products.length < 6) {
-        const i = config.products.length + 1;
-        config.products.push({
-          id: 'sku-0' + i,
-          name: 'Catalogue item ' + i,
-          tagline: '',
-          listPrice: 4500,
-          costFloor: 2800,
-          stock: 0,
-          image: 'images/sku-0' + i + '.svg',
-          badge: 'Coming soon',
-          nutrition: '',
-          color: '#64748b',
-          available: false,
-        });
-      }
+      ensureSixProducts(config);
       render();
     }
     try {
       await loadConfig();
+      ensureSixProducts(config);
       render();
     } catch (e) {
       console.error(e);
       if (!config) config = defaultConfig();
+      ensureSixProducts(config);
       render();
       showStatus('Using defaults — could not load products-config.json (' + (e.message || e) + ')', true);
     }
