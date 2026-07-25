@@ -18,7 +18,7 @@
       <p>Manna Life · OEO franchise · Navina products</p>
       <label class="field">
         <span>Admin password</span>
-        <input type="password" id="adminPassword" autocomplete="current-password" placeholder="Enter admin password" />
+        <input type="password" id="adminPassword" name="adminPassword" autocomplete="current-password" placeholder="Enter admin password" />
       </label>
       <p class="hint" style="text-align:left;margin:0 0 0.75rem;font-size:0.8rem;color:#64748b">
         Case-sensitive. No spaces before/after. Hint: starts with <strong>Admin@oeo</strong>…
@@ -50,10 +50,10 @@
     <section class="panel">
       <h2>Store settings</h2>
       <div class="grid-2">
-        <label class="field"><span>WhatsApp (with country code, no +)</span><input id="cfgWhatsapp" /></label>
-        <label class="field"><span>Delivery base (₦)</span><input id="cfgDelivery" type="number" min="0" step="100" /></label>
-        <label class="field"><span>Paystack public key (optional)</span><input id="cfgPaystack" placeholder="pk_live_… or pk_test_…" /></label>
-        <label class="field"><span>Franchise name on cart</span><input id="cfgFranchise" /></label>
+        <label class="field"><span>WhatsApp (with country code, no +)</span><input id="cfgWhatsapp" name="cfgWhatsapp" autocomplete="tel" /></label>
+        <label class="field"><span>Delivery base (₦)</span><input id="cfgDelivery" name="cfgDelivery" type="number" min="0" step="100" inputmode="numeric" /></label>
+        <label class="field"><span>Paystack public key (optional)</span><input id="cfgPaystack" name="cfgPaystack" autocomplete="off" placeholder="pk_live_… or pk_test_…" /></label>
+        <label class="field"><span>Franchise name on cart</span><input id="cfgFranchise" name="cfgFranchise" autocomplete="organization" /></label>
       </div>
     </section>
 
@@ -88,7 +88,7 @@
         <button type="button" class="btn ghost" id="btnClearLocal">Clear browser preview (use live file)</button>
         <label class="btn ghost file-btn">
           Import JSON
-          <input type="file" id="importFile" accept="application/json,.json" hidden />
+          <input type="file" id="importFile" name="importFile" accept="application/json,.json" hidden />
         </label>
       </div>
       <p id="statusMsg" class="status" hidden></p>

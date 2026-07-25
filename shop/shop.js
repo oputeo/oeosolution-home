@@ -352,7 +352,7 @@
               <label for="qty-${p.id}">Qty</label>
               <div class="shop-qty-controls">
                 <button type="button" data-dec="${p.id}" aria-label="Decrease" ${soldOut ? 'disabled' : ''}>−</button>
-                <input id="qty-${p.id}" type="number" min="0" max="${stock}" value="${q}" data-qty="${p.id}" ${soldOut ? 'disabled' : ''} />
+                <input id="qty-${p.id}" name="qty-${p.id}" type="number" min="0" max="${stock}" value="${q}" data-qty="${p.id}" autocomplete="off" ${soldOut ? 'disabled' : ''} />
                 <button type="button" data-inc="${p.id}" aria-label="Increase" ${soldOut ? 'disabled' : ''}>+</button>
               </div>
             </div>

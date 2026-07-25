@@ -423,10 +423,10 @@
       .map(
         (t, i) => `
       <tr>
-        <td><input data-t="min" type="number" min="1" value="${t.minQty}" /></td>
-        <td><input data-t="disc" type="number" min="0" max="0.5" step="0.01" value="${t.unitDiscount}" /></td>
-        <td><input data-t="del" type="number" min="0" max="1" step="0.05" value="${t.deliveryFactor}" /></td>
-        <td><input data-t="label" type="text" value="${escapeAttr(t.label || '')}" /></td>
+        <td><input id="tier-${i}-min" name="tier-${i}-min" data-t="min" type="number" min="1" value="${t.minQty}" autocomplete="off" /></td>
+        <td><input id="tier-${i}-disc" name="tier-${i}-disc" data-t="disc" type="number" min="0" max="0.5" step="0.01" value="${t.unitDiscount}" autocomplete="off" /></td>
+        <td><input id="tier-${i}-del" name="tier-${i}-del" data-t="del" type="number" min="0" max="1" step="0.05" value="${t.deliveryFactor}" autocomplete="off" /></td>
+        <td><input id="tier-${i}-label" name="tier-${i}-label" data-t="label" type="text" value="${escapeAttr(t.label || '')}" autocomplete="off" /></td>
       </tr>`,
       )
       .join('');
@@ -441,17 +441,17 @@
           <span class="slot">Slot ${i + 1} / 6</span>
         </h3>
         <div class="product-grid">
-          <label class="field"><span>ID (do not change often)</span><input data-p="id" value="${escapeAttr(p.id)}" /></label>
-          <label class="field"><span>Name</span><input data-p="name" value="${escapeAttr(p.name)}" /></label>
-          <label class="field full"><span>Tagline</span><input data-p="tagline" value="${escapeAttr(p.tagline || '')}" /></label>
-          <label class="field"><span>List price (₦ retail)</span><input data-p="listPrice" type="number" min="0" step="50" value="${p.listPrice}" /></label>
-          <label class="field"><span>Cost floor (₦ Navina cost)</span><input data-p="costFloor" type="number" min="0" step="50" value="${p.costFloor}" /></label>
-          <label class="field"><span>Stock qty (blank = unlimited)</span><input data-p="stock" type="number" min="0" step="1" value="${p.stock == null ? '' : p.stock}" placeholder="unlimited" /></label>
-          <label class="field"><span>Badge</span><input data-p="badge" value="${escapeAttr(p.badge || '')}" /></label>
-          <label class="field full"><span>Nutrition / notes</span><input data-p="nutrition" value="${escapeAttr(p.nutrition || '')}" /></label>
-          <label class="field"><span>Image path</span><input data-p="image" value="${escapeAttr(p.image || '')}" placeholder="images/ready-beans.jpg" /></label>
-          <label class="field"><span>Accent colour</span><input data-p="color" type="color" value="${normalizeColor(p.color)}" /></label>
-          <label class="field inline full"><input data-p="available" type="checkbox" ${p.available ? 'checked' : ''} /> <span>Available for sale (unchecked = Coming soon)</span></label>
+          <label class="field"><span>ID (do not change often)</span><input id="p-${i}-id" name="p-${i}-id" data-p="id" value="${escapeAttr(p.id)}" autocomplete="off" /></label>
+          <label class="field"><span>Name</span><input id="p-${i}-name" name="p-${i}-name" data-p="name" value="${escapeAttr(p.name)}" autocomplete="off" /></label>
+          <label class="field full"><span>Tagline</span><input id="p-${i}-tagline" name="p-${i}-tagline" data-p="tagline" value="${escapeAttr(p.tagline || '')}" autocomplete="off" /></label>
+          <label class="field"><span>List price (₦ retail)</span><input id="p-${i}-listPrice" name="p-${i}-listPrice" data-p="listPrice" type="number" min="0" step="50" value="${p.listPrice}" autocomplete="off" /></label>
+          <label class="field"><span>Cost floor (₦ Navina cost)</span><input id="p-${i}-costFloor" name="p-${i}-costFloor" data-p="costFloor" type="number" min="0" step="50" value="${p.costFloor}" autocomplete="off" /></label>
+          <label class="field"><span>Stock qty (blank = unlimited)</span><input id="p-${i}-stock" name="p-${i}-stock" data-p="stock" type="number" min="0" step="1" value="${p.stock == null ? '' : p.stock}" placeholder="unlimited" autocomplete="off" /></label>
+          <label class="field"><span>Badge</span><input id="p-${i}-badge" name="p-${i}-badge" data-p="badge" value="${escapeAttr(p.badge || '')}" autocomplete="off" /></label>
+          <label class="field full"><span>Nutrition / notes</span><input id="p-${i}-nutrition" name="p-${i}-nutrition" data-p="nutrition" value="${escapeAttr(p.nutrition || '')}" autocomplete="off" /></label>
+          <label class="field"><span>Image path</span><input id="p-${i}-image" name="p-${i}-image" data-p="image" value="${escapeAttr(p.image || '')}" placeholder="images/ready-beans.jpg" autocomplete="off" /></label>
+          <label class="field"><span>Accent colour</span><input id="p-${i}-color" name="p-${i}-color" data-p="color" type="color" value="${normalizeColor(p.color)}" /></label>
+          <label class="field inline full"><input id="p-${i}-available" name="p-${i}-available" data-p="available" type="checkbox" ${p.available ? 'checked' : ''} /> <span>Available for sale (unchecked = Coming soon)</span></label>
         </div>
         <div class="preview-row">
           <img src="../${escapeAttr(p.image || 'images/sku-04.svg')}" alt="" onerror="this.onerror=null;this.src='../images/sku-04.svg';this.style.opacity=0.85" />
@@ -459,7 +459,7 @@
             <div class="muted">Preview from shop/${escapeHtml(p.image || '')}</div>
             <label class="file-upload">
               Upload image → saves as data URL in config (large files may slow page)
-              <input type="file" accept="image/*" data-upload="${i}" hidden />
+              <input type="file" id="p-${i}-upload" name="p-${i}-upload" accept="image/*" data-upload="${i}" hidden />
             </label>
           </div>
         </div>
