@@ -34,16 +34,21 @@
       { minQty: 50, unitDiscount: 0.16, deliveryFactor: 0.5, label: 'Hostel / class (50–99)' },
       { minQty: 100, unitDiscount: 0.22, deliveryFactor: 0, label: 'School / dept (100+)' },
     ],
+    /**
+     * Up to 6 catalogue slots. Set available: false to show “Coming soon” (not addable).
+     * Edit name/prices when Navina adds SKUs. costFloor = never sell below Navina cost.
+     */
     products: [
       {
         id: 'ready-beans',
         name: 'Ready Beans',
         tagline: 'Protein-forward ready pouch',
         listPrice: 4500,
-        costFloor: 2800, // Navina cost — never sell below
+        costFloor: 2800,
         badge: 'BPA-free pouch',
         nutrition: 'Energy + plant protein · Ready to eat',
         color: '#0d9488',
+        available: true,
       },
       {
         id: 'yam-plantain',
@@ -54,6 +59,7 @@
         badge: 'BPA-free pouch',
         nutrition: 'Complex carbs · Ready to eat',
         color: '#0b3d91',
+        available: true,
       },
       {
         id: 'sweet-potato',
@@ -64,6 +70,40 @@
         badge: 'BPA-free pouch',
         nutrition: 'Vitamins + energy · Ready to eat',
         color: '#b45309',
+        available: true,
+      },
+      {
+        id: 'sku-04',
+        name: 'Catalogue item 4',
+        tagline: 'Edit name in shop.js when Navina SKU is ready',
+        listPrice: 4500,
+        costFloor: 2800,
+        badge: 'Coming soon',
+        nutrition: 'Nutrition panel from Navina pack',
+        color: '#64748b',
+        available: false,
+      },
+      {
+        id: 'sku-05',
+        name: 'Catalogue item 5',
+        tagline: 'Reserved slot for next Manna Life variant',
+        listPrice: 4500,
+        costFloor: 2800,
+        badge: 'Coming soon',
+        nutrition: 'Nutrition panel from Navina pack',
+        color: '#475569',
+        available: false,
+      },
+      {
+        id: 'sku-06',
+        name: 'Catalogue item 6',
+        tagline: 'Reserved slot for next Manna Life variant',
+        listPrice: 4500,
+        costFloor: 2800,
+        badge: 'Coming soon',
+        nutrition: 'Nutrition panel from Navina pack',
+        color: '#334155',
+        available: false,
       },
     ],
   };
@@ -179,10 +219,30 @@
     const root = document.getElementById('productGrid');
     if (!root) return;
     const qty = totalQty();
-    root.innerHTML = CONFIG.products
+    // Show up to 6 catalogue spaces
+    const catalog = CONFIG.products.slice(0, 6);
+    root.innerHTML = catalog
       .map((p) => {
-        const q = state.cart[p.id] || 0;
+        const available = p.available !== false;
+        const q = available ? state.cart[p.id] || 0 : 0;
         const unit = unitPrice(p, Math.max(qty, q || 1));
+        if (!available) {
+          return `
+        <article class="shop-card shop-card-soon" id="product-${p.id}">
+          <div class="shop-card-visual" style="--accent:${p.color}">
+            <span class="shop-card-emoji" aria-hidden="true">📦</span>
+            <span class="shop-badge">${escapeHtml(p.badge || 'Coming soon')}</span>
+          </div>
+          <div class="shop-card-body">
+            <p class="shop-kicker">Manna Life · ${escapeHtml(CONFIG.producer)}</p>
+            <h2>${escapeHtml(p.name)}</h2>
+            <p class="shop-tagline">${escapeHtml(p.tagline)}</p>
+            <p class="shop-nutrition">${escapeHtml(p.nutrition)}</p>
+            <p class="shop-price"><strong>—</strong> <span class="shop-price-note">Pricing on release</span></p>
+            <button type="button" class="btn btn-ghost shop-add" disabled>Coming soon</button>
+          </div>
+        </article>`;
+        }
         return `
         <article class="shop-card" id="product-${p.id}">
           <div class="shop-card-visual" style="--accent:${p.color}">

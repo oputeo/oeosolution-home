@@ -1,11 +1,40 @@
 # oeosolution.com — Domain wiring guide
 
+## Live site (July 2026)
+
+| URL | Status |
+|-----|--------|
+| **https://oeosolution-home.onrender.com** | **Working** (use this if custom domain times out) |
+| **https://oeosolution-home.onrender.com/shop/** | Manna Life shop |
+| `https://oeosolution.com` / `www` | Must CNAME/redirect to Render — **ERR_CONNECTION_TIMED_OUT** means DNS or SSL still wrong |
+
+### Fix timeout on oeosolution.com (Namecheap → Render)
+
+1. Render → service **oeosolution-home** → **Settings → Custom Domains**  
+   - Add `www.oeosolution.com` and `oeosolution.com` if missing  
+   - Wait until **Certificate issued**
+
+2. Namecheap → **Advanced DNS** for oeosolution.com:
+
+| Type | Host | Value |
+|------|------|--------|
+| **CNAME** | `www` | `oeosolution-home.onrender.com` |
+| **URL Redirect** (301) | `@` (apex) | `https://www.oeosolution.com/` |
+
+**Remove** old values pointing to GitHub Pages (`oputeo.github.io`), parking, or wrong hosts.
+
+3. Wait 15–60 minutes; test:
+   - https://www.oeosolution.com/shop/
+   - https://oeosolution-home.onrender.com/shop/ (always works)
+
+---
+
 ## Recommendation (final map)
 
 | Host | Purpose | Platform |
 |------|---------|----------|
-| `oeosolution.com` | Company homepage (this site) | Vercel or Render static |
-| `www.oeosolution.com` | Same homepage | CNAME → apex or platform |
+| `oeosolution.com` | Company homepage (this site) | **Render** `oeosolution-home` |
+| `www.oeosolution.com` | Same homepage | CNAME → `oeosolution-home.onrender.com` |
 | `aquatrack.oeosolution.com` | AquaTrack ERP | Render (aquatrack-frontend) |
 | `recon.oeosolution.com` | ReconFlow (later) | Vercel |
 | `smartdelta.oeosolution.com` | SmartDelta (later) | Railway |
