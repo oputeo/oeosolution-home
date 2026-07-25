@@ -49,7 +49,7 @@
         listPrice: 4500, // retail price customers see
         costFloor: 2800, // Navina cost — never sell below
         stock: 500, // max orderable qty (null = unlimited)
-        image: 'images/ready-beans.jpg', // put file in shop/images/
+        image: 'images/ready-beans.svg',
         badge: 'BPA-free pouch',
         nutrition: 'Energy + plant protein · Ready to eat',
         color: '#0d9488',
@@ -62,7 +62,7 @@
         listPrice: 4500,
         costFloor: 2800,
         stock: 500,
-        image: 'images/yam-plantain.jpg',
+        image: 'images/yam-plantain.svg',
         badge: 'BPA-free pouch',
         nutrition: 'Complex carbs · Ready to eat',
         color: '#0b3d91',
@@ -75,7 +75,7 @@
         listPrice: 4500,
         costFloor: 2800,
         stock: 500,
-        image: 'images/sweet-potato.jpg',
+        image: 'images/sweet-potato.svg',
         badge: 'BPA-free pouch',
         nutrition: 'Vitamins + energy · Ready to eat',
         color: '#b45309',
@@ -88,7 +88,7 @@
         listPrice: 4500,
         costFloor: 2800,
         stock: 0,
-        image: 'images/sku-04.jpg',
+        image: 'images/sku-04.svg',
         badge: 'Coming soon',
         nutrition: 'Nutrition panel from Navina pack',
         color: '#64748b',
@@ -101,7 +101,7 @@
         listPrice: 4500,
         costFloor: 2800,
         stock: 0,
-        image: 'images/sku-05.jpg',
+        image: 'images/sku-05.svg',
         badge: 'Coming soon',
         nutrition: 'Nutrition panel from Navina pack',
         color: '#475569',
@@ -114,7 +114,7 @@
         listPrice: 4500,
         costFloor: 2800,
         stock: 0,
-        image: 'images/sku-06.jpg',
+        image: 'images/sku-06.svg',
         badge: 'Coming soon',
         nutrition: 'Nutrition panel from Navina pack',
         color: '#334155',
