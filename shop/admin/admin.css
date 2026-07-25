@@ -95,6 +95,34 @@ body {
 .error { color: var(--danger); font-size: 0.85rem; margin: 0 0 0.5rem; }
 .status { margin: 0.75rem 0 0; font-size: 0.9rem; color: var(--ok); font-weight: 600; }
 .status.err { color: var(--danger); }
+
+.admin-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  z-index: 9999;
+  max-width: min(520px, calc(100vw - 2rem));
+  padding: 0.85rem 1.15rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.22);
+  pointer-events: none;
+}
+.admin-toast.ok {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+.admin-toast.err {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+.admin-toast[hidden] { display: none !important; }
+
+.actions-bar .actions { margin-bottom: 0.25rem; }
 .muted { color: var(--muted); font-size: 0.8rem; font-weight: 400; margin-left: 0.5rem; }
 .hint { font-size: 0.8rem; color: var(--muted); margin: 0.5rem 0 0; }
 

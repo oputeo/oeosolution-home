@@ -145,11 +145,35 @@
   }
 
   function showStatus(msg, isErr) {
+    const text = String(msg || '');
     const el = document.getElementById('statusMsg');
-    if (!el) return;
-    el.hidden = false;
-    el.textContent = msg;
-    el.className = 'status' + (isErr ? ' err' : '');
+    if (el) {
+      el.hidden = false;
+      el.textContent = text;
+      el.className = 'status' + (isErr ? ' err' : '');
+      try {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch {
+        /* ignore */
+      }
+    }
+    // Fixed toast — always visible even if status row is off-screen
+    let toast = document.getElementById('adminToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'adminToast';
+      toast.setAttribute('role', 'status');
+      document.body.appendChild(toast);
+    }
+    toast.textContent = text;
+    toast.className = 'admin-toast' + (isErr ? ' err' : ' ok');
+    toast.hidden = false;
+    clearTimeout(showStatus._t);
+    showStatus._t = setTimeout(() => {
+      toast.hidden = true;
+    }, isErr ? 10000 : 6000);
+    if (isErr) console.error('[shop-admin]', text);
+    else console.log('[shop-admin]', text);
   }
 
   function defaultProducts() {
@@ -374,40 +398,78 @@
   }
 
   function readFormIntoConfig() {
-    config.whatsapp = document.getElementById('cfgWhatsapp').value.trim();
-    config.deliveryBase = Number(document.getElementById('cfgDelivery').value) || 0;
-    config.paystackPublicKey = document.getElementById('cfgPaystack').value.trim();
-    config.franchiseName = document.getElementById('cfgFranchise').value.trim() || 'OEO Solution';
+    if (!config) config = defaultConfig();
+
+    const whatsappEl = document.getElementById('cfgWhatsapp');
+    const deliveryEl = document.getElementById('cfgDelivery');
+    const paystackEl = document.getElementById('cfgPaystack');
+    const franchiseEl = document.getElementById('cfgFranchise');
+    if (!whatsappEl || !deliveryEl || !paystackEl || !franchiseEl) {
+      throw new Error('Store settings fields not found — hard-refresh the admin page.');
+    }
+
+    config.whatsapp = whatsappEl.value.trim();
+    config.deliveryBase = Number(deliveryEl.value) || 0;
+    config.paystackPublicKey = paystackEl.value.trim();
+    config.franchiseName = franchiseEl.value.trim() || 'OEO Solution';
     config.updatedAt = new Date().toISOString();
 
     const tierRows = document.querySelectorAll('#tierBody tr');
-    config.tiers = Array.from(tierRows).map((tr) => ({
-      minQty: Number(tr.querySelector('[data-t="min"]').value) || 1,
-      unitDiscount: Math.min(0.5, Math.max(0, Number(tr.querySelector('[data-t="disc"]').value) || 0)),
-      deliveryFactor: Math.min(1, Math.max(0, Number(tr.querySelector('[data-t="del"]').value) || 0)),
-      label: tr.querySelector('[data-t="label"]').value.trim() || 'Tier',
-    }));
+    config.tiers = Array.from(tierRows).map((tr, i) => {
+      const min = tr.querySelector('[data-t="min"]');
+      const disc = tr.querySelector('[data-t="disc"]');
+      const del = tr.querySelector('[data-t="del"]');
+      const label = tr.querySelector('[data-t="label"]');
+      if (!min || !disc || !del || !label) {
+        throw new Error('Tier row ' + (i + 1) + ' is incomplete — hard-refresh admin.');
+      }
+      return {
+        minQty: Number(min.value) || 1,
+        unitDiscount: Math.min(0.5, Math.max(0, Number(disc.value) || 0)),
+        deliveryFactor: Math.min(1, Math.max(0, Number(del.value) || 0)),
+        label: label.value.trim() || 'Tier',
+      };
+    });
 
-    config.products = Array.from(document.querySelectorAll('.product-card')).map((card, idx) => {
-      const get = (name) => card.querySelector(`[data-p="${name}"]`);
-      const listPrice = Number(get('listPrice').value) || 0;
-      let costFloor = Number(get('costFloor').value) || 0;
+    const cards = document.querySelectorAll('.product-card');
+    if (!cards.length) {
+      throw new Error('No product cards on page — hard-refresh admin.');
+    }
+
+    config.products = Array.from(cards).map((card, idx) => {
+      const get = (name) => card.querySelector('[data-p="' + name + '"]');
+      const idEl = get('id');
+      const nameEl = get('name');
+      const listEl = get('listPrice');
+      const costEl = get('costFloor');
+      const stockEl = get('stock');
+      const imageEl = get('image');
+      const availEl = get('available');
+      if (!idEl || !nameEl || !listEl || !costEl || !stockEl || !imageEl || !availEl) {
+        throw new Error('Product slot ' + (idx + 1) + ' is missing fields — hard-refresh admin.');
+      }
+      const listPrice = Number(listEl.value) || 0;
+      let costFloor = Number(costEl.value) || 0;
       if (costFloor > listPrice && listPrice > 0) costFloor = listPrice;
-      const stockRaw = get('stock').value;
+      const stockRaw = stockEl.value;
       const stock =
         stockRaw === '' || stockRaw === 'null' ? null : Math.max(0, Number(stockRaw) || 0);
+      const taglineEl = get('tagline');
+      const badgeEl = get('badge');
+      const nutritionEl = get('nutrition');
+      const colorEl = get('color');
       return {
-        id: get('id').value.trim() || 'sku-' + (idx + 1),
-        name: get('name').value.trim() || 'Product ' + (idx + 1),
-        tagline: get('tagline').value.trim(),
+        id: idEl.value.trim() || 'sku-' + (idx + 1),
+        name: nameEl.value.trim() || 'Product ' + (idx + 1),
+        tagline: taglineEl ? taglineEl.value.trim() : '',
         listPrice,
         costFloor,
         stock,
-        image: get('image').value.trim() || 'images/' + (get('id').value.trim() || 'sku') + '.jpg',
-        badge: get('badge').value.trim(),
-        nutrition: get('nutrition').value.trim(),
-        color: get('color').value.trim() || '#0b3d91',
-        available: get('available').checked,
+        image: imageEl.value.trim() || 'images/' + (idEl.value.trim() || 'sku') + '.jpg',
+        badge: badgeEl ? badgeEl.value.trim() : '',
+        nutrition: nutritionEl ? nutritionEl.value.trim() : '',
+        color: colorEl && colorEl.value.trim() ? colorEl.value.trim() : '#0b3d91',
+        available: !!availEl.checked,
       };
     });
   }
@@ -516,32 +578,74 @@
   }
 
   function saveLocalPreview() {
-    readFormIntoConfig();
-    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
-    localStorage.setItem(USE_LOCAL_KEY, '1');
-    setSource('Browser preview (local)');
-    showStatus('Saved. Open the shop in this browser to preview. Other visitors still see the published file until you push JSON.');
+    try {
+      readFormIntoConfig();
+      const json = JSON.stringify(config);
+      try {
+        localStorage.setItem(CONFIG_KEY, json);
+        localStorage.setItem(USE_LOCAL_KEY, '1');
+      } catch (storageErr) {
+        showStatus(
+          'Could not save to browser storage (private mode or full). Use Download JSON instead. ' +
+            (storageErr.message || ''),
+          true,
+        );
+        return;
+      }
+      setSource('Browser preview (local)');
+      showStatus(
+        'Saved for this browser. Open shop in a new tab to preview. Other visitors still see the live file until you Download + git push.',
+      );
+    } catch (e) {
+      console.error(e);
+      showStatus('Save failed: ' + (e.message || e), true);
+    }
   }
 
   function downloadJson() {
-    readFormIntoConfig();
-    // Strip data URLs warning — keep them if user wants
-    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'products-config.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-    showStatus('Downloaded products-config.json — replace shop/products-config.json and git push.');
+    try {
+      readFormIntoConfig();
+      const json = JSON.stringify(config, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'products-config.json';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        try {
+          URL.revokeObjectURL(url);
+          a.remove();
+        } catch {
+          /* ignore */
+        }
+      }, 1500);
+      showStatus(
+        'Download started: products-config.json. Replace shop/products-config.json, then git push.',
+      );
+    } catch (e) {
+      console.error(e);
+      showStatus('Download failed: ' + (e.message || e), true);
+    }
   }
 
   function clearLocal() {
-    localStorage.removeItem(USE_LOCAL_KEY);
-    localStorage.removeItem(CONFIG_KEY);
-    loadConfig().then(() => {
-      render();
-      showStatus('Browser preview cleared. Shop will use live products-config.json.');
-    });
+    try {
+      localStorage.removeItem(USE_LOCAL_KEY);
+      localStorage.removeItem(CONFIG_KEY);
+    } catch {
+      /* ignore */
+    }
+    loadConfig()
+      .then(() => {
+        render();
+        showStatus('Browser preview cleared. Shop will use live products-config.json.');
+      })
+      .catch((e) => {
+        showStatus('Clear failed: ' + (e.message || e), true);
+      });
   }
 
   function importJson(file) {
@@ -635,20 +739,51 @@
     document.getElementById('adminPassword').value = '';
   }
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    document.getElementById('btnLogin').addEventListener('click', tryLogin);
-    document.getElementById('adminPassword').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') tryLogin();
+  function wireActionButtons() {
+    const map = [
+      ['btnLogin', tryLogin],
+      ['btnLogout', logout],
+      ['btnSaveLocal', saveLocalPreview],
+      ['btnSaveLocalTop', saveLocalPreview],
+      ['btnDownload', downloadJson],
+      ['btnDownloadTop', downloadJson],
+      ['btnClearLocal', clearLocal],
+    ];
+    map.forEach(([id, fn]) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          fn();
+        } catch (err) {
+          console.error(err);
+          showStatus('Action failed: ' + (err.message || err), true);
+        }
+      });
     });
-    document.getElementById('btnLogout').addEventListener('click', logout);
-    document.getElementById('btnSaveLocal').addEventListener('click', saveLocalPreview);
-    document.getElementById('btnDownload').addEventListener('click', downloadJson);
-    document.getElementById('btnClearLocal').addEventListener('click', clearLocal);
-    document.getElementById('importFile').addEventListener('change', (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (f) importJson(f);
-    });
+    const pw = document.getElementById('adminPassword');
+    if (pw) {
+      pw.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') tryLogin();
+      });
+    }
+    const importFile = document.getElementById('importFile');
+    if (importFile) {
+      importFile.addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (f) importJson(f);
+      });
+    }
+  }
 
-    if (sessionOk()) await enterAdmin();
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      wireActionButtons();
+      if (sessionOk()) await enterAdmin();
+    } catch (e) {
+      console.error(e);
+      showStatus('Admin failed to start: ' + (e.message || e), true);
+    }
   });
 })();
