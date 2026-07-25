@@ -20,6 +20,12 @@ body {
   line-height: 1.45;
 }
 
+/* Critical: .gate { display:grid } must not override HTML [hidden] */
+[hidden],
+.hidden {
+  display: none !important;
+}
+
 .gate {
   min-height: 100vh;
   display: grid;

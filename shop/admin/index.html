@@ -24,12 +24,12 @@
         Case-sensitive. No spaces before/after. Hint: starts with <strong>Admin@oeo</strong>…
       </p>
       <p id="loginError" class="error" hidden></p>
-      <button type="button" class="btn primary" id="btnLogin">Sign in</button>
+      <button type="button" class="btn primary" id="btnLogin" onclick="window.__mannaAdminLogin && window.__mannaAdminLogin()">Sign in</button>
       <a class="back" href="../">← Back to shop</a>
     </div>
   </div>
 
-  <div id="adminApp" class="admin" hidden>
+  <div id="adminApp" class="admin hidden" hidden>
     <header class="admin-top">
       <div>
         <strong>Manna Life Admin</strong>

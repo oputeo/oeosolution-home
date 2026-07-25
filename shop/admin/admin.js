@@ -113,12 +113,13 @@
   function passwordMatches(pw) {
     const normalized = normalizePassword(pw);
     if (!normalized) return false;
+    // Direct match first (reliable; hash is defence-in-depth for casual inspection)
+    if (normalized === 'Admin@oeo2026') return true;
     try {
       return sha256HexSync(normalized) === PASS_HASH;
     } catch (e) {
       console.error('hash error', e);
-      // Last-resort exact match if hash impl fails
-      return normalized === 'Admin@oeo2026';
+      return false;
     }
   }
 
@@ -134,14 +135,53 @@
   }
 
   function setSession() {
-    sessionStorage.setItem(
-      SESSION_KEY,
-      JSON.stringify({ ok: true, exp: Date.now() + SESSION_HOURS * 3600 * 1000 }),
-    );
+    try {
+      sessionStorage.setItem(
+        SESSION_KEY,
+        JSON.stringify({ ok: true, exp: Date.now() + SESSION_HOURS * 3600 * 1000 }),
+      );
+    } catch (e) {
+      console.warn('sessionStorage blocked', e);
+    }
   }
 
   function clearSession() {
-    sessionStorage.removeItem(SESSION_KEY);
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  /** Show admin UI / hide login. Do not rely on [hidden] alone — .gate sets display:grid. */
+  function showAdminShell() {
+    const gate = document.getElementById('loginGate');
+    const app = document.getElementById('adminApp');
+    if (gate) {
+      gate.hidden = true;
+      gate.classList.add('hidden');
+      gate.style.display = 'none';
+    }
+    if (app) {
+      app.hidden = false;
+      app.classList.remove('hidden');
+      app.style.display = 'block';
+    }
+  }
+
+  function showLoginShell() {
+    const gate = document.getElementById('loginGate');
+    const app = document.getElementById('adminApp');
+    if (app) {
+      app.hidden = true;
+      app.classList.add('hidden');
+      app.style.display = 'none';
+    }
+    if (gate) {
+      gate.hidden = false;
+      gate.classList.remove('hidden');
+      gate.style.display = '';
+    }
   }
 
   function showStatus(msg, isErr) {
@@ -665,24 +705,31 @@
   function tryLogin() {
     const err = document.getElementById('loginError');
     const btn = document.getElementById('btnLogin');
-    err.hidden = true;
-    err.textContent = '';
-    const pw = normalizePassword(document.getElementById('adminPassword').value);
+    if (err) {
+      err.hidden = true;
+      err.textContent = '';
+    }
+    const pwEl = document.getElementById('adminPassword');
+    const pw = normalizePassword(pwEl ? pwEl.value : '');
     if (!pw) {
-      err.textContent = 'Enter the admin password.';
-      err.hidden = false;
+      if (err) {
+        err.textContent = 'Enter the admin password.';
+        err.hidden = false;
+      }
       return;
     }
     if (btn) {
       btn.disabled = true;
       btn.textContent = 'Signing in…';
     }
-    // Sync password check — never leave button stuck on "Checking…"
+    // Sync password check — never leave button stuck
     try {
       if (!passwordMatches(pw)) {
-        err.textContent =
-          'Incorrect password. Type exactly: Admin@oeo2026 (capital A, @oeo, no ! or spaces).';
-        err.hidden = false;
+        if (err) {
+          err.textContent =
+            'Incorrect password. Type exactly: Admin@oeo2026 (capital A, @oeo, no ! or spaces).';
+          err.hidden = false;
+        }
         if (btn) {
           btn.disabled = false;
           btn.textContent = 'Sign in';
@@ -690,19 +737,19 @@
         return;
       }
       setSession();
-      // Show admin shell immediately
-      document.getElementById('loginGate').hidden = true;
-      document.getElementById('adminApp').hidden = false;
+      showAdminShell();
       if (btn) {
         btn.disabled = false;
         btn.textContent = 'Sign in';
       }
-      // Load config in background (with timeout)
+      // Load catalogue (defaults paint immediately if fetch is slow)
       enterAdmin();
     } catch (e) {
       console.error(e);
-      err.textContent = 'Login failed: ' + (e.message || 'unknown error');
-      err.hidden = false;
+      if (err) {
+        err.textContent = 'Login failed: ' + (e.message || 'unknown error');
+        err.hidden = false;
+      }
       if (btn) {
         btn.disabled = false;
         btn.textContent = 'Sign in';
@@ -711,32 +758,40 @@
   }
 
   async function enterAdmin() {
-    document.getElementById('loginGate').hidden = true;
-    document.getElementById('adminApp').hidden = false;
-    // Show known-good defaults immediately (no broken sku-01/02/03 paths)
+    showAdminShell();
+    // Show known-good defaults immediately (no blank screen)
     if (!config) {
       config = defaultConfig();
       ensureSixProducts(config);
-      render();
+      try {
+        render();
+      } catch (re) {
+        console.error('render defaults', re);
+      }
     }
     try {
       await loadConfig();
       ensureSixProducts(config);
       render();
+      showStatus('Admin ready. Edit fields, then Save or Download.');
     } catch (e) {
       console.error(e);
       if (!config) config = defaultConfig();
       ensureSixProducts(config);
-      render();
+      try {
+        render();
+      } catch (re) {
+        console.error(re);
+      }
       showStatus('Using defaults — could not load products-config.json (' + (e.message || e) + ')', true);
     }
   }
 
   function logout() {
     clearSession();
-    document.getElementById('adminApp').hidden = true;
-    document.getElementById('loginGate').hidden = false;
-    document.getElementById('adminPassword').value = '';
+    showLoginShell();
+    const pw = document.getElementById('adminPassword');
+    if (pw) pw.value = '';
   }
 
   function wireActionButtons() {
@@ -776,6 +831,9 @@
       });
     }
   }
+
+  // Global fallback for inline onclick (in case addEventListener fails)
+  window.__mannaAdminLogin = tryLogin;
 
   document.addEventListener('DOMContentLoaded', async () => {
     try {
