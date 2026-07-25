@@ -43,8 +43,10 @@
         id: 'ready-beans',
         name: 'Ready Beans',
         tagline: 'Protein-forward ready pouch',
-        listPrice: 4500,
-        costFloor: 2800,
+        listPrice: 4500, // retail price customers see
+        costFloor: 2800, // Navina cost — never sell below
+        stock: 500, // max orderable qty (null = unlimited)
+        image: 'images/ready-beans.jpg', // put file in shop/images/
         badge: 'BPA-free pouch',
         nutrition: 'Energy + plant protein · Ready to eat',
         color: '#0d9488',
@@ -56,6 +58,8 @@
         tagline: 'Local staple energy blend',
         listPrice: 4500,
         costFloor: 2800,
+        stock: 500,
+        image: 'images/yam-plantain.jpg',
         badge: 'BPA-free pouch',
         nutrition: 'Complex carbs · Ready to eat',
         color: '#0b3d91',
@@ -67,6 +71,8 @@
         tagline: 'Natural sweetness · sustained energy',
         listPrice: 4500,
         costFloor: 2800,
+        stock: 500,
+        image: 'images/sweet-potato.jpg',
         badge: 'BPA-free pouch',
         nutrition: 'Vitamins + energy · Ready to eat',
         color: '#b45309',
@@ -78,6 +84,8 @@
         tagline: 'Edit name in shop.js when Navina SKU is ready',
         listPrice: 4500,
         costFloor: 2800,
+        stock: 0,
+        image: 'images/sku-04.jpg',
         badge: 'Coming soon',
         nutrition: 'Nutrition panel from Navina pack',
         color: '#64748b',
@@ -89,6 +97,8 @@
         tagline: 'Reserved slot for next Manna Life variant',
         listPrice: 4500,
         costFloor: 2800,
+        stock: 0,
+        image: 'images/sku-05.jpg',
         badge: 'Coming soon',
         nutrition: 'Nutrition panel from Navina pack',
         color: '#475569',
@@ -100,6 +110,8 @@
         tagline: 'Reserved slot for next Manna Life variant',
         listPrice: 4500,
         costFloor: 2800,
+        stock: 0,
+        image: 'images/sku-06.jpg',
         badge: 'Coming soon',
         nutrition: 'Nutrition panel from Navina pack',
         color: '#334155',
@@ -207,8 +219,21 @@
     };
   }
 
+  function productById(id) {
+    return CONFIG.products.find((p) => p.id === id);
+  }
+
+  function maxStock(product) {
+    if (!product || product.available === false) return 0;
+    if (product.stock == null || product.stock === '') return 9999;
+    return Math.max(0, Number(product.stock) || 0);
+  }
+
   function setQty(id, qty) {
-    const n = Math.max(0, Math.min(9999, parseInt(qty, 10) || 0));
+    const product = productById(id);
+    const cap = maxStock(product);
+    let n = Math.max(0, parseInt(qty, 10) || 0);
+    if (n > cap) n = cap;
     if (n === 0) delete state.cart[id];
     else state.cart[id] = n;
     saveCart();
@@ -226,11 +251,22 @@
         const available = p.available !== false;
         const q = available ? state.cart[p.id] || 0 : 0;
         const unit = unitPrice(p, Math.max(qty, q || 1));
+        const stock = maxStock(p);
+        const stockLabel =
+          p.stock == null || p.stock === ''
+            ? 'In stock'
+            : stock <= 0
+              ? 'Out of stock'
+              : `${stock} in stock`;
+        const visual = p.image
+          ? `<img class="shop-card-img" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><span class="shop-card-emoji shop-card-emoji-fallback" style="display:none" aria-hidden="true">🍲</span>`
+          : `<span class="shop-card-emoji" aria-hidden="true">${available ? '🍲' : '📦'}</span>`;
+
         if (!available) {
           return `
         <article class="shop-card shop-card-soon" id="product-${p.id}">
           <div class="shop-card-visual" style="--accent:${p.color}">
-            <span class="shop-card-emoji" aria-hidden="true">📦</span>
+            ${visual}
             <span class="shop-badge">${escapeHtml(p.badge || 'Coming soon')}</span>
           </div>
           <div class="shop-card-body">
@@ -243,10 +279,11 @@
           </div>
         </article>`;
         }
+        const soldOut = stock <= 0;
         return `
         <article class="shop-card" id="product-${p.id}">
           <div class="shop-card-visual" style="--accent:${p.color}">
-            <span class="shop-card-emoji" aria-hidden="true">🍲</span>
+            ${visual}
             <span class="shop-badge">${escapeHtml(p.badge)}</span>
           </div>
           <div class="shop-card-body">
@@ -258,17 +295,17 @@
               <strong>${money(unit)}</strong>
               <span class="shop-price-note">/ pouch${q || qty ? ' (cart tier)' : ''}</span>
             </p>
-            <p class="shop-floor">Cost floor protected · list ${money(p.listPrice)}</p>
+            <p class="shop-floor">Cost floor protected · list ${money(p.listPrice)} · ${stockLabel}</p>
             <div class="shop-qty-row">
               <label for="qty-${p.id}">Qty</label>
               <div class="shop-qty-controls">
-                <button type="button" data-dec="${p.id}" aria-label="Decrease">−</button>
-                <input id="qty-${p.id}" type="number" min="0" max="9999" value="${q}" data-qty="${p.id}" />
-                <button type="button" data-inc="${p.id}" aria-label="Increase">+</button>
+                <button type="button" data-dec="${p.id}" aria-label="Decrease" ${soldOut ? 'disabled' : ''}>−</button>
+                <input id="qty-${p.id}" type="number" min="0" max="${stock}" value="${q}" data-qty="${p.id}" ${soldOut ? 'disabled' : ''} />
+                <button type="button" data-inc="${p.id}" aria-label="Increase" ${soldOut ? 'disabled' : ''}>+</button>
               </div>
             </div>
-            <button type="button" class="btn btn-primary shop-add" data-add="${p.id}">
-              ${q ? 'Update cart' : 'Add to cart'}
+            <button type="button" class="btn btn-primary shop-add" data-add="${p.id}" ${soldOut ? 'disabled' : ''}>
+              ${soldOut ? 'Out of stock' : q ? 'Update cart' : 'Add to cart'}
             </button>
           </div>
         </article>`;

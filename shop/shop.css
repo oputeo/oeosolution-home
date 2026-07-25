@@ -113,6 +113,19 @@
   position: relative;
 }
 .shop-card-emoji { font-size: 3rem; filter: grayscale(0.1); }
+.shop-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.shop-card-emoji-fallback {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
 .shop-badge {
   position: absolute;
   bottom: 0.65rem;
