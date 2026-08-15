@@ -104,9 +104,11 @@
   <script src="../js/social-config.js"></script>
   <script>
     /**
-     * PASTE YOUTUBE VIDEO IDs HERE (not full URLs).
-     * From https://www.youtube.com/watch?v=XXXXXXXX → use XXXXXXXX
-     * Leave blank until the clip is uploaded — a placeholder shows instead.
+     * Option A — YouTube (preferred for bandwidth once uploaded):
+     *   Paste IDs only: watch?v=XXXXXXXX → XXXXXXXX
+     * Option B — Self-hosted MP4 (works immediately on Render):
+     *   Files live under aquatrack/videos/  (see MEDIA-SETUP.md)
+     * Priority: YouTube ID if set, else local MP4 path if set, else placeholder.
      */
     var YOUTUBE_IDS = {
       sales: '',
@@ -115,6 +117,16 @@
       production: '',
       inventory: '',
       qc: ''
+    };
+
+    /** Relative to this page (aquatrack/). 16:9 web exports with Nigerian VO. */
+    var LOCAL_VIDEOS = {
+      sales: 'videos/01-sales.mp4',
+      purchases: 'videos/02-purchases.mp4',
+      'gate-qr': 'videos/03-gate-qr.mp4',
+      production: 'videos/04-production.mp4',
+      inventory: 'videos/05-inventory.mp4',
+      qc: 'videos/06-qc.mp4'
     };
 
     var MODULES = [
@@ -182,13 +194,26 @@
 
       root.innerHTML = MODULES.map(function (m) {
         var yt = youtubeEmbed(YOUTUBE_IDS[m.id]);
-        var media = yt
-          ? '<div class="video-frame"><iframe src="' + yt + '" title="' + m.title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>'
-          : '<div class="video-placeholder">' +
+        var local = LOCAL_VIDEOS[m.id];
+        var media;
+        if (yt) {
+          media = '<div class="video-frame"><iframe src="' + yt + '" title="' + m.title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>';
+        } else if (local) {
+          media =
+            '<div class="video-frame video-frame--native">' +
+              '<video controls playsinline preload="metadata" title="' + m.title + '">' +
+                '<source src="' + local + '" type="video/mp4" />' +
+                'Your browser does not support video.' +
+              '</video>' +
+            '</div>';
+        } else {
+          media =
+            '<div class="video-placeholder">' +
               '<p class="video-placeholder-title">Clip coming soon</p>' +
-              '<p class="video-placeholder-hint">Paste the YouTube ID for <strong>' + m.id + '</strong> in <code>YOUTUBE_IDS</code> on this page.</p>' +
+              '<p class="video-placeholder-hint">Add a self-hosted file under <code>aquatrack/videos/</code> or paste a YouTube ID for <strong>' + m.id + '</strong>.</p>' +
               '<p class="video-placeholder-share">Shareable link: <code>oeosolution.com/aquatrack#' + m.id + '</code></p>' +
             '</div>';
+        }
 
         var list = m.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('');
 

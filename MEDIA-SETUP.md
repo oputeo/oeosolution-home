@@ -9,7 +9,28 @@
 | Link-in-bio (IG etc.) | https://oeosolution.com/links/ |
 | Deep link example | https://oeosolution.com/aquatrack/#gate-qr |
 
-## 1. Paste YouTube clip IDs
+## 1. Module walkthrough videos (two options)
+
+### Option A — Self-hosted MP4 (already wired)
+
+Put compressed **16:9** clips here:
+
+```
+oeosolution-home/aquatrack/videos/
+  01-sales.mp4
+  02-purchases.mp4
+  03-gate-qr.mp4
+  04-production.mp4
+  05-inventory.mp4
+  06-qc.mp4
+```
+
+Source exports (with Nigerian VO):  
+`Documents\Production Projects\AquaTrack-Module-Clips\web-16x9\`
+
+The page reads paths from `LOCAL_VIDEOS` in `aquatrack/index.html`. Deploy the `videos/` folder with the site (watch Render disk limits — keep each clip ~5–15 MB).
+
+### Option B — YouTube (better for large traffic)
 
 Edit `aquatrack/index.html` — find `YOUTUBE_IDS`:
 
@@ -24,7 +45,17 @@ var YOUTUBE_IDS = {
 };
 ```
 
-Use the video id only (`watch?v=XXXXXXXX` → `XXXXXXXX`). Full YouTube URLs also work.
+Use the video id only (`watch?v=XXXXXXXX` → `XXXXXXXX`). Full YouTube URLs also work.  
+**If a YouTube ID is set, it overrides the local MP4** for that module.
+
+### Do you need screenshots first?
+
+**No.** Screenshots alone are not enough for walkthroughs. Prefer:
+
+1. **Screen recording** of AquaTrack (best trust), or  
+2. Existing **MOD 01–06** master clips in CapCut pack, then VO.
+
+Still frames only work for static carousels — not module walkthrough video.
 
 Suggested YouTube titles:
 
